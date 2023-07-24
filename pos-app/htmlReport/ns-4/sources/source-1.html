@@ -1,0 +1,220 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > BrandDto</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.increff.pos.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: BrandDto (com.increff.pos.dto)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BrandDto</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.4%
+  </span>
+  <span class="absValue">
+    (54/56)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.increff.pos.dto;
+&nbsp;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.nio.charset.StandardCharsets;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;import com.increff.pos.api.BrandApi;
+&nbsp;import com.increff.pos.exception.UploadException;
+&nbsp;import com.increff.pos.model.data.DataTableResponse;
+&nbsp;import com.increff.pos.util.ValidationUtil;
+&nbsp;import jdk.nashorn.internal.ir.BreakableNode;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import com.increff.pos.model.data.BrandData;
+&nbsp;import com.increff.pos.model.form.BrandForm;
+&nbsp;import com.increff.pos.pojo.BrandPojo;
+&nbsp;import com.increff.pos.exception.ApiException;
+&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;
+&nbsp;import static com.increff.pos.dto.helper.BrandDtoHelper.*;
+&nbsp;import static com.increff.pos.util.TsvUtil.createRow;
+&nbsp;import static com.increff.pos.util.TsvUtil.parseHeader;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;public class BrandDto {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private BrandApi api;
+&nbsp;
+&nbsp;    public int add(BrandForm form) throws ApiException {
+<b class="fc">&nbsp;        normalize(form);</b>
+<b class="fc">&nbsp;        ValidationUtil.checkValid(form);</b>
+<b class="fc">&nbsp;        BrandPojo p = convert(form);</b>
+<b class="fc">&nbsp;        return api.add(p);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void tsvUpload(MultipartFile file) throws ApiException, UploadException {
+<b class="fc">&nbsp;        List&lt;List&lt;String&gt;&gt; error = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        List&lt;BrandForm&gt; brandForms = null;</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            brandForms = tsvToBrandForm(file, error);</b>
+<b class="fc">&nbsp;            ValidationUtil.checkValidMultiple(brandForms, error);</b>
+<b class="fc">&nbsp;            normalizeAndCheckDuplicateForms(brandForms, error);</b>
+<b class="fc">&nbsp;            List&lt;BrandPojo&gt; brandPojos = convert(brandForms);</b>
+&nbsp;
+<b class="fc">&nbsp;            if(error.size() &gt; 0) throw new UploadException(&quot;Upload failed&quot;, error);</b>
+<b class="fc">&nbsp;            api.addAll(brandPojos);</b>
+<b class="nc">&nbsp;        } catch (IOException e) {</b>
+<b class="nc">&nbsp;            throw new UploadException(&quot;Something went wrong! make sure tsv contains less than 5000 lines&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public BrandData get(int id) throws ApiException {
+<b class="fc">&nbsp;        BrandPojo p = api.get(id);</b>
+<b class="fc">&nbsp;        return convert(p);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;BrandData&gt; getAll() {
+<b class="fc">&nbsp;        List&lt;BrandPojo&gt; list = api.getAll();</b>
+<b class="fc">&nbsp;        List&lt;BrandData&gt; list2 = new ArrayList&lt;BrandData&gt;();</b>
+<b class="fc">&nbsp;        for (BrandPojo p : list) {</b>
+<b class="fc">&nbsp;            list2.add(convert(p));</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return list2;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void update(int id,BrandForm form) throws ApiException {
+<b class="fc">&nbsp;        normalize(form);</b>
+<b class="fc">&nbsp;        ValidationUtil.checkValid(form);</b>
+<b class="fc">&nbsp;        BrandPojo p = convert(form);</b>
+<b class="fc">&nbsp;        api.update(id, p);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;BrandForm&gt; tsvToBrandForm(MultipartFile file, List&lt;List&lt;String&gt;&gt;error) throws UploadException, IOException, ApiException {
+<b class="fc">&nbsp;        List&lt;BrandForm&gt; objectsList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));</b>
+<b class="fc">&nbsp;        int i = 1;</b>
+<b class="fc">&nbsp;        String line = br.readLine();</b>
+<b class="fc">&nbsp;        HashMap&lt;String, Integer&gt; map = parseHeader(line, new String[]{&quot;brand&quot;, &quot;category&quot;});</b>
+<b class="fc">&nbsp;        while ((line = br.readLine()) != null &amp;&amp; i &lt;= 5000) {</b>
+<b class="fc">&nbsp;            if (line.trim().isEmpty()) {</b>
+<b class="fc">&nbsp;                i++;</b>
+<b class="fc">&nbsp;                continue;</b>
+&nbsp;            }
+<b class="fc">&nbsp;            String[] columns = line.split(&quot;\t&quot;);</b>
+<b class="fc">&nbsp;            if (columns.length != 2) {</b>
+<b class="fc">&nbsp;                error.add(createRow(i, &quot;Column size: &quot; + columns.length, &quot;Columns size must be 2&quot;));</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                objectsList.add(createBrandForm(columns, map));</b>
+&nbsp;            }
+<b class="fc">&nbsp;            i++;</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        if(br.readLine() != null) throw new UploadException(&quot;Input file contains more than 5000 lines&quot;);</b>
+<b class="fc">&nbsp;        return objectsList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void normalizeAndCheckDuplicateForms(List&lt;BrandForm&gt; forms, List&lt;List&lt;String&gt;&gt; error) throws UploadException{
+<b class="fc">&nbsp;        HashMap&lt;String, String&gt; map = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        for(int i = 0 ; i &lt; forms.size();i++){</b>
+<b class="fc">&nbsp;            BrandForm form = forms.get(i);</b>
+<b class="fc">&nbsp;            normalize(form);</b>
+&nbsp;            try{
+<b class="fc">&nbsp;                BrandPojo p = api.getCheck(form.getBrand(), form.getCategory());</b>
+<b class="fc">&nbsp;                error.add(createRow(i+1, &quot;Brand: &quot;+form.getBrand()+&quot; | Category: &quot; + form.getCategory(),&quot;Brand category already exists in master&quot;));</b>
+&nbsp;            }
+<b class="fc">&nbsp;            catch (ApiException e){</b>
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;            if(Objects.equals(map.get(form.getBrand()), form.getCategory())){</b>
+<b class="fc">&nbsp;                error.add(createRow(i+1, &quot;Brand: &quot;+form.getBrand()+&quot; | Category: &quot; + form.getCategory(),&quot;Brand category already exists in tsv&quot;));</b>
+&nbsp;            }
+<b class="fc">&nbsp;            map.put(form.getBrand(), form.getCategory());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-24 19:53</div>
+</div>
+</body>
+</html>

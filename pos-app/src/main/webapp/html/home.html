@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="snippets.html :: name_head">
+
+</head>
+
+
+
+<nav th:replace="snippets.html :: name_app_navbar"></nav>
+
+<body class="px-5">
+
+<div class="row justify-content-around">
+	<div class="card">
+		<div class="card-header bg-primary text-white">Brand</div>
+		<img class="card-img-top img-fluid" style="max-width: 350px" alt="" th:src="@{/static/resources/brand-hero-img.jpg}">
+		<div class="card-body">
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item">Add Brand and Category</li>
+				<li class="list-group-item">Edit Brand and Category</li>
+				<li class="list-group-item">Delete Brand and Category</li>
+				<li class="list-group-item">Upload using .tsv file</li>
+			</ul>
+
+			<a th:href="@{/ui/brand}" type="button" class="card-link">Go to Brands →</a>
+		</div>
+	</div>
+
+	<div class="card">
+		<div class="card-header text-white" style="background-color: #d268cc;">Product</div>
+		<img class="card-img-top img-fluid" style="max-width: 325px" alt="" th:src="@{/static/resources/product-hero-img.jpg}">
+		<div class="card-body">
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item">Add Product details</li>
+				<li class="list-group-item">Edit Product details</li>
+				<li class="list-group-item">Delete Product details</li>
+				<li class="list-group-item">Upload using .tsv file</li>
+			</ul>
+
+			<a th:href="@{/ui/product}" type="button" class="card-link">Go to Products →</a>
+		</div>
+	</div>
+
+	<div class="card">
+		<div class="card-header text-white" style="background-color: #009c86;">Inventory</div>
+		<img class="card-img-top img-fluid" style="max-width: 350px" alt="" th:src="@{/static/resources/inventory-hero-img.jpg}">
+		<div class="card-body">
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item">Add Inventory Details</li>
+				<li class="list-group-item">Edit Inventory Details</li>
+				<li class="list-group-item">Upload using .tsv file</li>
+				<li class="list-group-item">.</li>
+			</ul>
+
+			<a th:href="@{/ui/inventory}" type="button" class="card-link">Go to Inventory →</i></a>
+		</div>
+	</div>
+</div>
+</body>
+
+<footer th:replace="snippets.html :: name_footer">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</footer>

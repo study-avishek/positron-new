@@ -1,0 +1,138 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PosDaySaleDao</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.increff.pos.dao</a>
+</div>
+
+<h1>Coverage Summary for Class: PosDaySaleDao (com.increff.pos.dao)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PosDaySaleDao</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.increff.pos.dao;
+&nbsp;
+&nbsp;import com.increff.pos.pojo.BrandPojo;
+&nbsp;import com.increff.pos.pojo.PosDaySalePojo;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import javax.persistence.EntityManager;
+&nbsp;import javax.persistence.PersistenceContext;
+&nbsp;import javax.persistence.TypedQuery;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Repository
+<b class="fc">&nbsp;public class PosDaySaleDao extends AbstractDao{</b>
+<b class="fc">&nbsp;    private static String select_all = &quot;select p from PosDaySalePojo p where (:startDate=null or date&gt;=:startDate) &quot; +</b>
+&nbsp;            &quot;and (:endDate=null or date&lt;=:endDate)&quot;;
+<b class="fc">&nbsp;    private static String select_date = &quot;select p from PosDaySalePojo p where date&gt;=:date&quot;;</b>
+&nbsp;
+&nbsp;    public void insert(PosDaySalePojo p){
+<b class="fc">&nbsp;        em().persist(p);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;PosDaySalePojo&gt; getAll(LocalDate startDate, LocalDate endDate){
+<b class="fc">&nbsp;        TypedQuery&lt;PosDaySalePojo&gt; query = getQuery(select_all, PosDaySalePojo.class);</b>
+<b class="fc">&nbsp;        query.setParameter(&quot;startDate&quot;, startDate);</b>
+<b class="fc">&nbsp;        query.setParameter(&quot;endDate&quot;, endDate);</b>
+<b class="fc">&nbsp;        return query.getResultList();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public PosDaySalePojo select(LocalDate date){
+<b class="fc">&nbsp;        TypedQuery&lt;PosDaySalePojo&gt; query = getQuery(select_date, PosDaySalePojo.class);</b>
+<b class="fc">&nbsp;        query.setParameter(&quot;date&quot;, date);</b>
+<b class="fc">&nbsp;        return getSingle(query);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-24 19:53</div>
+</div>
+</body>
+</html>

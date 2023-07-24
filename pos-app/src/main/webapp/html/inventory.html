@@ -1,0 +1,205 @@
+<!doctype html>
+
+<html lang="en">
+
+<head th:replace="snippets.html :: name_head">
+
+</head>
+
+<body class="px-5">
+
+<nav th:replace="snippets.html :: name_app_navbar"></nav>
+
+
+    <div class="row">
+        <h3 class="mr-4" >Inventory <span th:if="${info.role == 'admin'}">Master</span>
+            <small class="text-muted mx-2">view <span th:if="${info.role == 'admin'}">and manage </span>inventory</small>
+        </h3>
+        <div th:if="${info.role == 'admin'}">
+            <button class="btn btn-info mx-3" id="upload-data">
+                <i class="fa-solid fa-cloud mr-2" style="color: #ffffff;"></i>
+                Upload</button>
+        </div>
+    </div>
+
+    <!-- Blank Row -->
+    <div class="row"></div>
+    <div class="row">
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm table-striped" id="inventory-table">
+                <thead>
+                <tr>
+                    <th scope="col">Barcode</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Brand</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col" th:if="${info.role == 'admin'}">Edit</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="edit-inventory-modal" th:if="${info.role == 'admin'}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Inventory</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="inventory-edit-form">
+                        <div class="form-group row mb-2">
+                            <label class="col-sm-4 col-form-label">Barcode</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="displayBarcode" class="form-control" readonly >
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <label class="col-sm-4 col-form-label">Product</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="displayProduct" class="form-control" readonly >
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <label class="col-sm-4 col-form-label">Brand</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="displayBrand" class="form-control" readonly >
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <label class="col-sm-4 col-form-label">Category</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="displayCategory" class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <label class="col-sm-4 col-form-label">Current Quantity</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="displayQuantity" class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputQuantity" class="col-sm-4 col-form-label">New Quantity</label>
+                            <div class="col-sm-8">
+                                <input id="inputQuantity"
+                                       type="number"
+                                       class="form-control"
+                                       name="quantity"
+                                       placeholder="enter quantity"
+                                       min="0"
+                                       max="100000000"
+                                       step="1"
+                                       title="Please enter a valid value less than 100000000"
+                                       required
+                                >
+                            </div>
+                        </div>
+                        <input type="hidden" id="displayId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-success" id="update-inventory">
+                        <i class="fa-solid fa-pen-to-square mr-2" style="color: #ffffff;"></i>
+                        Update
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Upload Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="upload-inventory-modal" th:if="${info.role == 'admin'}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Inventory</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="inventory-file">
+                        <input type="file" class="custom-file-input" id="inventoryFile" onchange="handleFileUpload('inventoryFile', 'inventoryFileName')">
+                        <label class="custom-file-label" for="inventoryFile" id="inventoryFileName">Choose file</label>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">Tsv should contain 2 headers named "barcode" and "quantity"</li>
+                        <li class="list-group-item">Input should be limited to 5000 lines</li>
+                        <li class="list-group-item">All the row should contain 1 string and 1 number separated by tab</li>
+                        <li class="list-group-item">In case of duplicate rows only last entry will be considered. </li>
+                    </ul>
+                    <a th:href="@{/api/resource/inventory.tsv}" target="_blank">Download Sample</a>
+                    <br>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>
+                        Cancel</button>
+                    <button type="button" class="btn btn-success" id="process-data">
+                        <i class="fa-solid fa-cloud mr-2" style="color: #ffffff;"></i>
+                        Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="error-inventory-modal" th:if="${info.role == 'admin'}">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button class="btn btn-primary ml-2" onclick="downloadPDF('inventory-error-table')"><i class="fa-solid fa-file-pdf mr-2" style="color: #ffffff;"></i>Download PDF</button>
+                        <button class="btn btn-secondary ml-2" onclick="downloadTSV('inventory-error-table')"><i class="fa-solid fa-file-excel mr-2" style="color: #ffffff;"></i>Download TSV</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+
+                <div class="modal-body">
+                    <table class ="table table-sm table-striped" id="inventory-error-table">
+                        <thead>
+                        <tr>
+                            <th>Line no.</th>
+                            <th>Invalid Data</th>
+                            <th>Cause</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<footer th:replace="snippets.html :: name_footer"></footer>
+
+<script th:src="@{/static/inventory.js}"></script>
+
+</body>
+
+</html>

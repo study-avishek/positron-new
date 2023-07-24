@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fop version="1.1">
+  <renderers>
+    <renderer mime="application/pdf">
+      <fonts>
+        <!-- Optional: Embed the fonts used in your XSL-FO document -->
+        <!-- <font embed-url="path/to/font.ttf" kerning="yes" embed-file="true" /> -->
+      </fonts>
+    </renderer>
+  </renderers>
+</fop>

@@ -1,0 +1,315 @@
+<!doctype html>
+
+<html lang="en">
+
+<head th:replace="snippets.html :: name_head">
+
+</head>
+
+<body class="px-5">
+
+<nav th:replace="snippets.html :: name_app_navbar"></nav>
+
+    <div class="row">
+        <h3 class="mr-4" >Product <span th:if="${info.role == 'admin'}">Master</span>
+            <small class="text-muted mx-2">view <span th:if="${info.role == 'admin'}">and manage</span> products</small>
+        </h3>
+        <div th:if="${info.role == 'admin'}">
+            <button class="btn btn-primary" id="show-add-modal">
+                <i class="fa-solid fa-plus mr-2" style="color: #ffffff;"></i>
+                Add
+            </button>
+            <button class="btn btn-info mx-3" id="upload-data">
+                <i class="fa-solid fa-cloud mr-2" style="color: #ffffff;"></i>
+                Upload</button>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="add-product-modal" th:if="${info.role == 'admin'}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="product-form">
+                        <div class="form-group mb-2 row">
+                            <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text"
+                                       class="form-control"
+                                       name="name"
+                                       id="inputName"
+                                       placeholder="enter name"
+                                       maxlength="50"
+                                       required
+                                >
+                            </div>
+                        </div>
+                        <div class="form-group mb-2 row">
+                            <label for="inputBarcode" class="col-sm-2 col-form-label">Barcode</label>
+                            <div class="col-sm-10">
+                                <input type="text"
+                                       class="form-control"
+                                       name="barcode"
+                                       id="inputBarcode"
+                                       placeholder="enter barcode"
+                                       minlength="6"
+                                       maxlength="20"
+                                       pattern="[a-zA-Z0-9]*"
+                                       title="Barcode should be alpha numeric.Length 6-20"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="form-group mb-2 row">
+                            <label for="inputBrand" class="col-sm-2 col-form-label">Brand</label>
+                            <div class="col-sm-10">
+                                <select id="inputBrand" name="brand" class="form-control select-picker" data-live-search="true" required>
+
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group mb-2 row">
+                            <label for="inputCategory" class="col-sm-2 col-form-label">Category</label>
+                            <div class="col-sm-10">
+                                <select id="inputCategory" name="category" class="form-control select-picker" data-live-search="true" disabled required>
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-2 row">
+                            <label for="inputMrp" class="col-sm-2 col-form-label">Mrp</label>
+                            <div class="col-sm-10">
+                                <input type="number"
+                                       min="0"
+                                       max="100000000"
+                                       step="0.01"
+                                       data-bind="value:replyNumber"
+                                       class="form-control"
+                                       name="mrp"
+                                       id="inputMrp"
+                                       placeholder="enter mrp"
+                                       title="Enter a valid denomination less than 100000000"
+                                       required
+                                >
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>
+                        Cancel</button>
+                    <button type="button" class="btn btn-success" id="add-product">
+                        <i class="fa-solid fa-plus mr-2" style="color: #ffffff;"></i>
+                        Add
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Blank Row -->
+    <div class="row">
+        &nbsp;
+    </div>
+    <div class="row">
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped" id="product-table">
+                <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Brand</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Barcode</th>
+                    <th scope="col">Mrp</th>
+
+                    <th scope="col" th:if="${info.role == 'admin'}">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Product Edit Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="edit-product-modal" th:if="${info.role == 'admin'}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="product-edit-form">
+                        <div class="form-group row mb-2">
+                            <label for="editName" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text"
+                                       class="form-control"
+                                       id="editName"
+                                       name="name"
+                                       placeholder="enter name"
+                                       maxlength="50"
+                                       required
+
+                                >
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="editBarcode" class="col-sm-2 col-form-label">Barcode</label>
+                            <div class="col-sm-10">
+                                <input type="text"
+                                       class="form-control"
+                                       id="editBarcode"
+                                       name="barcode"
+                                       placeholder="enter barcode"
+                                       minlength="6"
+                                       maxlength="20"
+                                       pattern="[a-zA-Z0-9]*"
+                                       title="Barcode should be alpha numeric.Length 6-20"
+                                       required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <label for="editBrand" class="col-sm-2 col-form-label">Brand</label>
+                            <div class="col-sm-10">
+                                <select id="editBrand" class="form-control select-picker" data-live-search="true" name="brand" required>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="editCategory" class="col-sm-2 col-form-label">Category</label>
+                            <div class="col-sm-10">
+                                <select id="editCategory" class="form-control select-picker" data-live-search="true" name="category" disabled required>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="editMrp" class="col-sm-2 col-form-label">Mrp</label>
+                            <div class="col-sm-10">
+                                <input type="number"
+                                       min="0"
+                                       max="100000000"
+                                       step="0.01"
+                                       data-bind="value:replyNumber"
+                                       class="form-control"
+                                       id="editMrp"
+                                       name="mrp"
+                                       placeholder="enter mrp"
+                                       pattern="^[0-9]{1,10}(\.[0-9]{1,2})?$"
+                                       title="Enter a valid denomination less than 100000000"
+                                       required>
+                            </div>
+                        </div>
+                        <input type="hidden" name="id" >
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>Cancel</button>
+                    <button type="button" class="btn btn-success" id="update-product">
+                        <i class="fa-solid fa-pen-to-square mr-2" style="color: #ffffff;"></i>
+                        Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Product Upload Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="upload-product-modal" th:if="${info.role == 'admin'}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="product-file">
+                        <input type="file" class="custom-file-input" id="productFile" onchange="handleFileUpload('productFile', 'productFileName')">
+                        <label class="custom-file-label" for="productFile" id="productFileName">Choose file</label>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">Tsv should contain 5 headers named "name", "brand", "category", "barcode", "mrp"</li>
+                        <li class="list-group-item">Input should be limited to 5000 lines</li>
+                        <li class="list-group-item">All the row should contain 4 strings and one number separated by tab</li>
+                        <li class="list-group-item">It should not contain duplicate barcode entries</li>
+                    </ul>
+                    <a th:href="@{/api/resource/product.tsv}" target="_blank">Download Sample</a>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-success" id="process-data">
+                        <i class="fa-solid fa-cloud mr-2" style="color: #ffffff;"></i>
+                        Upload
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="error-product-modal" th:if="${info.role == 'admin'}">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload error</h5>
+                    <button class="btn btn-primary ml-2" onclick="downloadPDF('product-error-table')"><i class="fa-solid fa-file-pdf mr-2" style="color: #ffffff;"></i>Download PDF</button>
+                    <button class="btn btn-secondary ml-2" onclick="downloadTSV('product-error-table')"><i class="fa-solid fa-file-excel mr-2" style="color: #ffffff;"></i>Download TSV</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class ="table table-sm table-striped table-bordered" id="product-error-table">
+                            <thead>
+                            <tr>
+                                <th>Line no.</th>
+                                <th>Invalid Data</th>
+                                <th>Cause</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<footer th:replace="snippets.html :: name_footer"></footer>
+
+<script th:src="@{/static/product.js}"></script>
+
+</body>
+
+</html>

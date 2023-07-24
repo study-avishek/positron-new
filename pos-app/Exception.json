@@ -1,0 +1,13 @@
+{
+  "BRAND_CAT_EXISTS": "Brand category combination already exists",
+  "BRAND_ID_NOT_EXISTS": "Brand with given ID does not exists",
+  "BRAND_CAT_NOT_EXISTS": "Brand category combination does not exists",
+
+  "PROD_BARCODE_EXISTS": "Product with given barcode already exists",
+  "PROD_ID_NOT_EXISTS": "Product with given ID doest not exist",
+
+  "INVENTORY_TOO_BIG": "Inventory size can't be more than 10,000,000",
+  "INVENTORY_NEGATIVE": "Inventory can't be less than 0",
+  "INVENTORY_ID_NOT_EXISTS": "Inventory with given ID does not exist"
+
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="snippets.html :: name_head">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"/>
+</head>
+<body class="px-5">
+
+<nav th:replace="snippets.html :: name_app_navbar"></nav>
+
+<div class="row">
+    <div>
+        <h3 class="mr-4" >Sales Report
+        </h3>
+    </div>
+    <div class="row">
+        <button class="btn btn-success" id="show-filter-modal">
+            <i class="fa-solid fa-filter mr-2" style="color: #ffffff;"></i>
+            Apply filter
+        </button>
+        <button class="btn btn-primary ml-2" onclick="downloadPDF('sales-report-table')"><i class="fa-solid fa-file-pdf mr-2" style="color: #ffffff;"></i>Print PDF</button>
+        <button class="btn btn-secondary ml-2" onclick="downloadTSV('sales-report-table')"><i class="fa-solid fa-file-excel mr-2" style="color: #ffffff;"></i>Download TSV</button>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped" id="sales-report-table">
+        <thead>
+        <tr>
+            <th scope="col">Brand</th>
+            <th scope="col">Category</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Revenue</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="filter-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Apply filter</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="filter-edit-form">
+                    <div class="form-group row mb-2 justify-content-around">
+                        <label for="inputStartDate" class="col-sm-3 col-form-label">Start date</label>
+                        <div class="col-sm-7">
+                            <input autocomplete="off" id="inputStartDate" type="text" class="form-control datepicker" name="startDate" placeholder="enter start date">
+                        </div>
+                        <button type="button" id="clearBtnStart" class="btn btn-secondary col-sm-1"><i class="fa-solid fa-arrows-rotate" style="color: #ffffff;"></i></button>
+                    </div>
+                    <div class="form-group row mb-2 justify-content-around">
+                        <label for="inputEndDate" class="col-sm-3 col-form-label">End date</label>
+                        <div class="col-sm-7">
+                            <input autocomplete="off" id="inputEndDate" type="text" class="form-control datepicker" name="endDate" placeholder="enter end date">
+                        </div>
+                        <button type="button" id="clearBtnEnd" class="btn btn-secondary col-sm-1"><i class="fa-solid fa-arrows-rotate" style="color: #ffffff;"></i></button>
+                    </div>
+                    <div class="form-group mb-2 row justify-content-around">
+                        <label for="inputBrand" class="col-sm-3 col-form-label">Brand</label>
+                        <div class="col-sm-7">
+                            <select id="inputBrand" name="brand" class="form-control selectpicker" data-live-search="true">
+
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-white col-sm-1" disabled><i class="fa-solid fa-arrows-rotate" style="color: #ffffff;"></i></button>
+
+                    </div>
+                    <div class="form-group mb-3 row justify-content-around">
+                        <label for="inputCategory" class="col-sm-3 col-form-label">Category</label>
+                        <div class="col-sm-7">
+                            <select id="inputCategory" name="category" class="form-control selectpicker" data-live-search="true">
+
+                            </select>
+                        </div>
+                        <button type="button"class="btn btn-white col-sm-1" disabled><i class="fa-solid fa-arrows-rotate" style="color: #ffffff;"></i></button>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" id="apply-filter">
+                    <i class="fa-solid fa-pen-to-square mr-2" style="color: #ffffff;"></i>
+                    Apply
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="snippets.html :: name_footer">
+</footer>
+<script th:src="@{/static/sales-report.js}"/></script>
+
+</div>
+</body>
+</html>

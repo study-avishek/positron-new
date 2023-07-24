@@ -1,0 +1,106 @@
+<!doctype html>
+
+<html lang="en">
+
+<head th:replace="snippets.html :: name_head">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"/>
+</head>
+
+<body class="px-5">
+
+<nav th:replace="snippets.html :: name_app_navbar"></nav>
+
+<div class="row">
+    <h2 class="mr-4" >Manage Orders</span>
+        <small class="text-muted mx-2">view and manage orders</small>
+    </h2>
+</div>
+
+
+
+
+
+<div class="row">
+    &nbsp;
+</div>
+<div class="row">
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table table-sm table-striped table-bordered " id="manage-order-table">
+            <thead>
+            <tr>
+                <th scope="col">Order Id</th>
+                <th scope="col">Status</th>
+                <th scope="col">Item Count</th>
+                <th scope="col">Order Total</th>
+                <th scope="col">Actions</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="delete-order-confirmation" th:if="${info.role == 'admin'}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Delete order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body ">
+                <p>you want to delete the order? This process is irreversible</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning text-white" data-dismiss="modal">
+                    <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-danger" id="confirm-delete">
+                    <i class="fa-solid fa-trash mr-2" style="color: #ffffff;"></i>
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="upi-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img class="modal-title">Pay using UPI
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body d-flex justify-content-center align-items-center">
+                <div id="qrcode"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<footer th:replace="snippets.html :: name_footer">
+
+</footer>
+
+<script th:src="@{/static/qrcode.js}"></script>
+<script th:src="@{/static/manage-order.js}"/></script>
+
+</body>
+
+</html>

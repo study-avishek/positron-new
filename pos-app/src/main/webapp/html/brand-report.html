@@ -1,0 +1,92 @@
+<!doctype html>
+
+<html lang="en">
+
+<head th:replace="snippets.html :: name_head">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"/>
+</head>
+
+<body class="px-5">
+
+<nav th:replace="snippets.html :: name_app_navbar"></nav>
+
+  <div class="row">
+      <h3 class="mr-4" >Brand Report
+        <small class="text-muted mx-2">view brand and category details</small>
+      </h3>
+
+
+    <button class="btn btn-success ml-3" id="show-filter-modal">
+      <i class="fa-solid fa-filter mr-2" style="color: #ffffff;"></i>
+      Apply filter
+    </button>
+    <button class="btn btn-primary ml-2" onclick="downloadPDF('brand-table')"><i class="fa-solid fa-file-pdf mr-2" style="color: #ffffff;"></i>Print PDF</button>
+    <button class="btn btn-secondary ml-2" onclick="downloadTSV('brand-table')"><i class="fa-solid fa-file-excel mr-2" style="color: #ffffff;"></i>Download TSV</button>
+
+  </div>
+
+
+  <!-- Table -->
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered" id="brand-table">
+      <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Category</th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+
+<div class="modal" tabindex="-1" role="dialog" id="filter-modal" th:if="${info.role == 'admin'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Apply filter</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="filter-edit-form">
+          <div class="form-group mb-2 row">
+            <label for="inputBrand" class="col-sm-2 col-form-label">Brand</label>
+            <div class="col-sm-10">
+              <select id="inputBrand" name="brand" class="form-control  selectpicker" data-live-search="true">
+                <option value="">Select Brand</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group mb-2 row">
+            <label for="inputCategory" class="col-sm-2 col-form-label">Category</label>
+            <div class="col-sm-10">
+              <select id="inputCategory" name="category" class="form-control selectpicker" data-live-search="true">
+                <option value="">Select Category</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" id="apply-filter">
+          <i class="fa-solid fa-pen-to-square mr-2" style="color: #ffffff;"></i>
+          Apply
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer th:replace="snippets.html :: name_footer">
+</footer>
+<script th:src="@{/static/brand-report.js}"/></script>
+
+</body>
+
+</html>

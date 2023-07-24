@@ -1,0 +1,388 @@
+<!doctype html>
+
+<html lang="en">
+
+<head th:replace="snippets.html :: name_head"></head>
+
+<body class="px-5">
+
+<nav th:replace="snippets.html :: name_app_navbar"></nav>
+
+
+    <div class="row mb-2 align-items-center">
+        <h3>Order items</h3>
+        <button class="btn btn-success mx-2" id="show-add-item" th:if="${(param.status != null) and (param.status[0] == 'active')}">
+            <i class="fa-solid fa-plus mr-2" style="color: #ffffff;"></i>
+            Add item</button>
+        <button class="btn btn-info mx-2" id="upload-data" th:if="${(param.status != null) and (param.status[0] == 'active')}">
+            <i class="fa-solid fa-cloud mr-2" style="color: #ffffff;"></i>
+            Upload</button>
+        <button type="button" class="btn btn-primary mx-2" id="complete-order" th:if="${(param.status != null) and (param.status[0] == 'active')}">
+            <i class="fa-solid fa-check-to-slot" style="color: #ffffff;"></i>
+            Complete</button>
+        <button type="button" class="btn btn-danger mx-2" id="show-delete-order-modal" th:if="${(param.status != null) and (param.status[0] == 'active')}">
+            <i class="fa-solid fa-trash mr-2" style="color: #ffffff;"></i>
+            Delete</button>
+        <h3><span class="badge badge-pill badge-secondary ml-5">Grand total: <span class="total-amount">0</span> Rs.</span></h3>
+        <h3 th:if="${param.id != null}"><span class="badge text-white badge-pill badge-warning ml-3">Order Id: <span th:text="${param.id}"></span></span></h3>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="add-order-item-modal" th:if="${info.role == 'admin'}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form  id="order-form">
+                    <div class="form-group row">
+                        <label for="inputBarcode" class="col-sm-3 col-form-label">Barcode</label>
+                        <div class="col-sm-9">
+                            <input type="text"
+                                   class="form-control"
+                                   name="barcode"
+                                   id="inputBarcode"
+                                   placeholder="enter barcode"
+                                   minlength="6"
+                                   maxlength="20"
+                                   pattern="[a-zA-Z0-9]*"
+                                   title="Barcode should be alpha numeric.Length 6-20"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputQuantity" class="col-sm-3 col-form-label">Quantity</label>
+                        <div class="col-sm-9">
+                            <input type="number"
+                                   class="form-control"
+                                   name="quantity"
+                                   id="inputQuantity"
+                                   placeholder="enter quantity"
+                                   min="1"
+                                   max="100000000"
+                                   step="1"
+                                   title="Please enter a valid value less than 100000000"
+                                   required
+                            >
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputSellingPrice" class="col-sm-3 col-form-label">Selling Price</label>
+                        <div class="col-sm-9">
+                            <input type="number"
+                                   class="form-control"
+                                   name="sellingPrice"
+                                   id="inputSellingPrice"
+                                   placeholder="selling price"
+                                   min="0"
+                                   max="100000000"
+                                   step="0.01"
+                                   title="Enter a valid denomination less than 100000000"
+                                   required
+                            >
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>
+                    Cancel</button>
+                <button type="button" class="btn btn-success" id="add-item">
+                    <i class="fa-solid fa-plus mr-2" style="color: #ffffff;"></i>
+                    Add
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Top row with form-->
+
+
+    <!-- Blank Row -->
+    <div class="row">
+        &nbsp;
+    </div>
+    <div class="row">
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="order-table">
+                <thead>
+                <tr>
+                    <th scope="col">Barcode</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Mrp</th>
+                    <th scope="col">SellingPrice</th>
+                    <th scope="col">Item Total</th>
+                    <th scope="col" th:if="${(param.status != null) and (param.status[0] == 'active')}">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+
+    <div class="modal" tabindex="-1" role="dialog" id="edit-item-modal" th:if="${(param.status != null) and (param.status[0] == 'active')}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Order Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-item-form">
+                        <div class="form-group row mb-2">
+                            <label for="inputBarcode" class="col-sm-2 col-form-label">Barcode</label>
+                            <div class="col-sm-10">
+                                <input type="text" readonly class="form-control" name="barcode" placeholder="enter barcode">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="editQuantity" class="col-sm-2 col-form-label">Quantity</label>
+                            <div class="col-sm-10">
+                                <input type="text"
+                                       class="form-control"
+                                       id="editQuantity"
+                                       name="quantity"
+                                       placeholder="enter quantity"
+                                       min="1"
+                                       max="100000000"
+                                       step="1"
+                                       title="Please enter a valid value less than 100000000"
+                                >
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="editSellingPrice" class="col-sm-2 col-form-label">Selling Price</label>
+                            <div class="col-sm-10">
+                                <input type="text"
+                                       class="form-control"
+                                       id="editSellingPrice"
+                                       name="sellingPrice"
+                                       placeholder="enter selling price"
+                                       min="0"
+                                       max="100000000"
+                                       step="0.01"
+                                       title="Enter a valid denomination less than 100000000"
+                                       required>
+                            </div>
+                        </div>
+                        <input type="hidden" name="id" >
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-success" id="update-item">
+                        <i class="fa-solid fa-pen-to-square mr-2" style="color: #ffffff;"></i>
+                        Update
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- customer details modal-->
+
+    <div class="modal" tabindex="-1" role="dialog" id="customer-details" th:if="${(param.status != null) and (param.status[0] == 'active')}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Customer Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="customer-details-form">
+                        <div class="form-group row mb-2">
+                            <label for="customerName" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text"
+                                       class="form-control"
+                                       id="customerName"
+                                       name="customerName"
+                                       placeholder="enter customer name"
+                                       maxlength="30"
+                                       pattern="^[a-zA-Z\s]+$"
+                                       title="Customer length should contain alphabets only.Length 1-30"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <label for="customerEmail" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email"
+                                       maxlength="50"
+                                       class="form-control"
+                                       id="customerEmail"
+                                       name="email"
+                                       placeholder="enter customer email">
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <label for="customerPhone" class="col-sm-2 col-form-label">Phone</label>
+                            <div class="col-sm-10">
+                                <input type="tel"
+                                       class="form-control"
+                                       id="customerPhone"
+                                       name="phone"
+                                       placeholder="enter customer phone"
+                                       pattern="^[0-9]{10}$"
+                                       title="Enter a valid phone number without country code"
+                                >
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-success" id="generate-invoice">
+                        <i class="fa-solid fa-file-invoice-dollar" style="color: #ffffff;"></i>
+                        Invoice
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="upload-order-modal" th:if="${(param.status != null) and (param.status[0] == 'active')}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="order-file">
+                        <input type="file" class="custom-file-input" id="orderFile" onchange="handleFileUpload('orderFile','orderFileName')">
+                        <label class="custom-file-label" for="orderFile" id="orderFileName">Choose file</label>
+                    </div>
+                    <li class="list-group-item">Tsv should contain 3 headers named "barcode", "quantity" and "selling price"</li>
+                    <li class="list-group-item">Input should be limited to 5000 lines</li>
+                    <li class="list-group-item">All the row should contain 3 strings separated by tab</li>
+                    <li class="list-group-item">If duplicate barcode entries are provided. Quantity will be added and selling price will be updated to the latest price</li>
+                    <a th:href="@{/api/resource/order.tsv}" target="_blank">Download Sample</a>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-success" id="process-data">
+                        <i class="fa-solid fa-cloud mr-2" style="color: #ffffff;"></i>
+                        Upload
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="error-order-modal" th:if="${(param.status != null) and (param.status[0] == 'active')}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <table class ="table table-sm table-striped" id="order-error-table">
+                        <thead>
+                        <tr>
+                            <th>Line no.</th>
+                            <th>Invalid Data</th>
+                            <th>Cause</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="upi-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Pay using UPI</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body d-flex justify-content-center align-items-center">
+                    <div id="qrcode"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="modal" tabindex="-1" role="dialog" id="delete-order-confirmation" th:if="${info.role == 'admin'}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Delete order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body ">
+                <p>you want to delete the order? This process is irreversible</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning text-white" data-dismiss="modal">
+                    <i class="fa-solid fa-xmark mr-2" style="color: #ffffff;"></i>
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-danger" id="delete-order">
+                    <i class="fa-solid fa-trash mr-2" style="color: #ffffff;"></i>
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<footer th:replace="snippets.html :: name_footer">
+
+</footer>
+<script th:src="@{/static/order.js}"></script>
+
+</body>
+
+</html>

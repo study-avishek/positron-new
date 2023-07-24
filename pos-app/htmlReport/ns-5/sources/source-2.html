@@ -1,0 +1,136 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > InventoryDtoHelper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.increff.pos.dto.helper</a>
+</div>
+
+<h1>Coverage Summary for Class: InventoryDtoHelper (com.increff.pos.dto.helper)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">InventoryDtoHelper</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.3%
+  </span>
+  <span class="absValue">
+    (12/13)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.increff.pos.dto.helper;
+&nbsp;
+&nbsp;import com.increff.pos.model.data.InventoryData;
+&nbsp;import com.increff.pos.model.form.InventoryForm;
+&nbsp;import com.increff.pos.pojo.InventoryPojo;
+&nbsp;import com.increff.pos.util.StringUtil;
+&nbsp;
+&nbsp;import static com.increff.pos.util.StringUtil.trimZeros;
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;public class InventoryDtoHelper {</b>
+&nbsp;
+&nbsp;    public static InventoryPojo convert(InventoryForm f){
+<b class="fc">&nbsp;        InventoryPojo p = new InventoryPojo();</b>
+<b class="fc">&nbsp;        p.setQuantity(Integer.parseInt(f.getQuantity()));</b>
+<b class="fc">&nbsp;        return p;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static InventoryData convert(InventoryPojo p, String prod, String brand, String category, String barcode) {
+<b class="fc">&nbsp;        InventoryData d = new InventoryData();</b>
+<b class="fc">&nbsp;        d.setId(p.getId());</b>
+<b class="fc">&nbsp;        d.setProd(prod);</b>
+<b class="fc">&nbsp;        d.setBrand(brand);</b>
+<b class="fc">&nbsp;        d.setCategory(category);</b>
+<b class="fc">&nbsp;        d.setQuantity(String.valueOf(p.getQuantity()));</b>
+<b class="fc">&nbsp;        d.setBarcode(barcode);</b>
+<b class="fc">&nbsp;        return d;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void normalize(InventoryForm form){
+<b class="fc">&nbsp;        form.setQuantity(trimZeros(form.getQuantity()));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-24 19:53</div>
+</div>
+</body>
+</html>

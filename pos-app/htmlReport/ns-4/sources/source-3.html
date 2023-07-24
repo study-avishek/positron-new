@@ -1,0 +1,235 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > InventoryDto</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.increff.pos.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: InventoryDto (com.increff.pos.dto)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">InventoryDto</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98.2%
+  </span>
+  <span class="absValue">
+    (55/56)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.increff.pos.dto;
+&nbsp;
+&nbsp;import com.increff.pos.api.InventoryApi;
+&nbsp;import com.increff.pos.api.flow.InventoryFlow;
+&nbsp;import com.increff.pos.exception.ApiException;
+&nbsp;
+&nbsp;import com.increff.pos.exception.UploadException;
+&nbsp;import com.increff.pos.model.data.InventoryData;
+&nbsp;import com.increff.pos.model.form.InventoryForm;
+&nbsp;import com.increff.pos.pojo.InventoryPojo;
+&nbsp;import com.increff.pos.util.ValidationUtil;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.nio.charset.StandardCharsets;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import static com.increff.pos.dto.helper.InventoryDtoHelper.convert;
+&nbsp;import static com.increff.pos.dto.helper.InventoryDtoHelper.normalize;
+&nbsp;import static com.increff.pos.util.StringUtil.trimZeros;
+&nbsp;import static com.increff.pos.util.TsvUtil.createRow;
+&nbsp;import static com.increff.pos.util.TsvUtil.parseHeader;
+&nbsp;import static com.increff.pos.util.ValidationUtil.checkValid;
+&nbsp;
+&nbsp;/**
+&nbsp; * Interacts with Controller layer and API layer
+&nbsp; * Validates and Converts input/output data
+&nbsp; */
+&nbsp;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;public class InventoryDto {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private InventoryApi api;
+&nbsp;    @Autowired
+&nbsp;    private InventoryFlow flow;
+&nbsp;
+&nbsp;
+&nbsp;    //Validates input forms data and forwards to API layer as POJO
+&nbsp;    public void update(int id, InventoryForm f) throws ApiException {
+<b class="fc">&nbsp;        normalize(f);</b>
+<b class="fc">&nbsp;        checkValid(f);</b>
+<b class="fc">&nbsp;        InventoryPojo p = convert(f);</b>
+<b class="fc">&nbsp;        api.update(id, p);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void tsvUpload(MultipartFile file) throws UploadException, ApiException {
+<b class="fc">&nbsp;        List&lt;String&gt; barcodes = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        List&lt;List&lt;String&gt;&gt; errors = new ArrayList&lt;&gt;();</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            List&lt;InventoryForm&gt; inventoryForms = tsvToInventoryForm(file, barcodes, errors);</b>
+<b class="fc">&nbsp;            ValidationUtil.checkValidMultiple(inventoryForms, errors);</b>
+<b class="fc">&nbsp;            List&lt;InventoryPojo&gt; inventoryPojos = convertToList(inventoryForms, barcodes, errors);</b>
+<b class="fc">&nbsp;            if(errors.size() &gt; 0){</b>
+<b class="nc">&nbsp;                throw new UploadException(&quot;Error uploading inventory&quot;, errors);</b>
+&nbsp;            }
+<b class="fc">&nbsp;            api.addAll(inventoryPojos);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        catch (Exception e){</b>
+<b class="fc">&nbsp;            throw new UploadException(&quot;Something went wrong! make sure tsv contains less than 5000 lines&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;InventoryData&gt; getAll() throws ApiException {
+<b class="fc">&nbsp;        List&lt;Object[]&gt; list = api.getAll();</b>
+<b class="fc">&nbsp;        List&lt;InventoryData&gt; list2 = new ArrayList&lt;InventoryData&gt;();</b>
+<b class="fc">&nbsp;        for (Object[] obj : list) {</b>
+<b class="fc">&nbsp;            InventoryData inventoryData = new InventoryData();</b>
+<b class="fc">&nbsp;            inventoryData.setBarcode((String)obj[0]);</b>
+<b class="fc">&nbsp;            inventoryData.setProd((String)obj[1]);</b>
+<b class="fc">&nbsp;            inventoryData.setBrand((String)obj[2]);</b>
+<b class="fc">&nbsp;            inventoryData.setCategory((String)obj[3]);</b>
+<b class="fc">&nbsp;            inventoryData.setQuantity(String.valueOf(obj[4]));</b>
+<b class="fc">&nbsp;            inventoryData.setId((int)obj[5]);</b>
+<b class="fc">&nbsp;            list2.add(inventoryData);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return list2;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public InventoryData get(int id) throws ApiException{
+<b class="fc">&nbsp;        InventoryPojo p = api.getCheck(id);</b>
+<b class="fc">&nbsp;        int prodId = p.getId();</b>
+<b class="fc">&nbsp;        return convert(p, flow.getProd(prodId), flow.getBrand(prodId), flow.getCategory(prodId),</b>
+<b class="fc">&nbsp;                flow.getBarcode(prodId));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;InventoryForm&gt; tsvToInventoryForm(MultipartFile file, List&lt;String&gt; barcodes, List&lt;List&lt;String&gt;&gt; errors)
+&nbsp;            throws UploadException, IOException {
+<b class="fc">&nbsp;        int i = 1;</b>
+<b class="fc">&nbsp;        BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));</b>
+<b class="fc">&nbsp;        List&lt;InventoryForm&gt; objectsList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        HashMap&lt;String, Integer&gt; map = parseHeader(br.readLine(), new String[]{&quot;barcode&quot;, &quot;quantity&quot;});</b>
+&nbsp;        String line;
+<b class="fc">&nbsp;        while ((line = br.readLine()) != null) {</b>
+<b class="fc">&nbsp;            if (line.trim().isEmpty() &amp;&amp; i &lt;= 5000) {</b>
+<b class="fc">&nbsp;                i++;</b>
+<b class="fc">&nbsp;                continue;</b>
+&nbsp;            }
+<b class="fc">&nbsp;            String[] columns = line.split(&quot;\t&quot;);</b>
+<b class="fc">&nbsp;            if(columns.length != 2){</b>
+<b class="fc">&nbsp;                errors.add(createRow(i, &quot;Column size: &quot; + columns.length, &quot;Column size must be 2&quot;));</b>
+<b class="fc">&nbsp;                continue;</b>
+&nbsp;            }
+<b class="fc">&nbsp;            InventoryForm object = createInventoryForm(columns,barcodes,map,errors, i);</b>
+<b class="fc">&nbsp;            objectsList.add(object);</b>
+<b class="fc">&nbsp;            i++;</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        if(br.readLine() != null) throw new UploadException(&quot;Input contains more than 5000 lines&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        return objectsList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public InventoryForm createInventoryForm(String[] columns, List&lt;String&gt; barcodes, HashMap&lt;String, Integer&gt; map,
+&nbsp;                                             List&lt;List&lt;String&gt;&gt; errors, int i){
+<b class="fc">&nbsp;        InventoryForm form = new InventoryForm();</b>
+<b class="fc">&nbsp;        form.setQuantity((trimZeros(columns[map.get(&quot;quantity&quot;)])));</b>
+<b class="fc">&nbsp;        barcodes.add(columns[map.get(&quot;barcode&quot;)].toLowerCase().trim());</b>
+<b class="fc">&nbsp;        return form;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;InventoryPojo&gt; convertToList(List&lt;InventoryForm&gt; inventoryForms, List&lt;String&gt; barcodes, List&lt;List&lt;String&gt;&gt; errors) throws ApiException {
+<b class="fc">&nbsp;        return flow.convert(inventoryForms, barcodes, errors);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-24 19:53</div>
+</div>
+</body>
+</html>
