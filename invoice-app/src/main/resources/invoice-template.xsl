@@ -122,7 +122,7 @@
                                                 <fo:block><xsl:value-of select="itemNumber"/></fo:block>
                                             </fo:table-cell>
                                             <fo:table-cell padding="1mm 2mm">
-                                                <fo:block><xsl:value-of select="name"/></fo:block>
+                                                <fo:block white-space="pre"><xsl:value-of select="name"/></fo:block>
                                             </fo:table-cell>
                                             <fo:table-cell padding="1mm 2mm" text-align="right">
                                                 <fo:block><xsl:value-of select="format-number(quantity, '0.0')"/></fo:block>
