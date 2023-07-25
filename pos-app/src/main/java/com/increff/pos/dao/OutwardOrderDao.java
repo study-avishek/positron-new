@@ -4,8 +4,6 @@ import com.increff.pos.model.enums.OrderStatus;
 import com.increff.pos.pojo.OutwardOrderPojo;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;

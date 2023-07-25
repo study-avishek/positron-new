@@ -1,4 +1,7 @@
-var global;
+Number.prototype.formatLongNumber = function () {
+  return this.toFixed(0);
+};
+
 function toJson($form){
     var serialized = $form.serializeArray();
     console.log(serialized);
@@ -123,7 +126,6 @@ function createNewOrder(){
         url: url,
         type: 'POST',
         success: function(data){
-            global = data;
             var id = data.id;
             var status = data.orderStatus;
             url = $("meta[name=baseUrl]").attr("content") + "/ui/order?id=" + id + "&status="+status.toLowerCase();
@@ -272,8 +274,8 @@ function resetAllFormErrors() {
 }
 
 function validateInputsAndToggleButtons(buttonIds, inputIds) {
-            const buttons = buttonIds.map(id => document.getElementById(id));
-            const inputs = inputIds.map(id => document.getElementById(id));
+            const buttons = buttonIds.map(id => document.getElementById(id)).filter(button => button !== null);
+            const inputs = inputIds.map(id => document.getElementById(id)).filter(button => button !== null);
 
             function areAllInputsValid() {
                 return inputs.every(input => input.checkValidity());

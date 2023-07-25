@@ -1,7 +1,6 @@
 package com.increff.pos.api;
 
 import com.increff.pos.dao.PosDaySaleDao;
-import com.increff.pos.exception.ApiException;
 import com.increff.pos.pojo.PosDaySalePojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

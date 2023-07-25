@@ -1,21 +1,24 @@
 package com.increff.pos.dto;
 
+import com.increff.pos.api.BrandApi;
+import com.increff.pos.exception.ApiException;
+import com.increff.pos.exception.UploadException;
+import com.increff.pos.model.data.BrandData;
+import com.increff.pos.model.form.BrandForm;
+import com.increff.pos.pojo.BrandPojo;
+import com.increff.pos.util.ValidationUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-
-import com.increff.pos.api.BrandApi;
-import com.increff.pos.exception.UploadException;
-import com.increff.pos.util.ValidationUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import com.increff.pos.model.data.BrandData;
-import com.increff.pos.model.form.BrandForm;
-import com.increff.pos.pojo.BrandPojo;
-import com.increff.pos.exception.ApiException;
-import org.springframework.web.multipart.MultipartFile;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 import static com.increff.pos.dto.helper.BrandDtoHelper.*;
 import static com.increff.pos.util.TsvUtil.createRow;
@@ -79,7 +82,7 @@ public class BrandDto {
         int i = 1;
         String line = br.readLine();
         HashMap<String, Integer> map = parseHeader(line, new String[]{"brand", "category"});
-        while ((line = br.readLine()) != null && i < 5000) {
+        while (i <= 5000 && (line = br.readLine()) != null) {
             if (line.trim().isEmpty()) {
                 i++;
                 continue;

@@ -1,16 +1,15 @@
 package com.increff.pos.dto;
 
-import java.util.Objects;
-
+import com.increff.pos.api.UserApi;
+import com.increff.pos.exception.ApiException;
+import com.increff.pos.model.form.UserForm;
+import com.increff.pos.pojo.UserPojo;
 import com.increff.pos.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.increff.pos.model.form.UserForm;
-import com.increff.pos.pojo.UserPojo;
-import com.increff.pos.exception.ApiException;
-import com.increff.pos.api.UserApi;
+import java.util.Objects;
 
 
 @Component

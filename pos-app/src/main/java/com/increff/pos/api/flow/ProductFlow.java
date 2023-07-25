@@ -6,7 +6,6 @@ import com.increff.pos.api.ProductApi;
 import com.increff.pos.exception.ApiException;
 import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.InventoryPojo;
-import com.increff.pos.pojo.ProductPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

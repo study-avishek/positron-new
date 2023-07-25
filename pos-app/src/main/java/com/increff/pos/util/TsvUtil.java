@@ -1,6 +1,5 @@
 package com.increff.pos.util;
 
-import com.increff.pos.exception.ApiException;
 import com.increff.pos.exception.UploadException;
 
 import java.util.ArrayList;

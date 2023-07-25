@@ -16,9 +16,15 @@ $(document).ready( function () {
     var currentUrl = window.location.href;
     var url = new URL(currentUrl);
     var searchParams = new URLSearchParams(url.search);
-    validateInputsAndToggleButtons(['update-item'], ['editQuantity', 'editSellingPrice']);
-    validateInputsAndToggleButtons(['add-item'], ['inputBarcode', 'inputQuantity', 'inputSellingPrice']);
+
+
     orderId = searchParams.get('id');
+    var status = searchParams.get('status');
+    if(status != null && status != 'completed'){
+        validateInputsAndToggleButtons(['update-item'], ['editQuantity', 'editSellingPrice']);
+        validateInputsAndToggleButtons(['add-item'], ['inputBarcode', 'inputQuantity', 'inputSellingPrice']);
+        validateInputsAndToggleButtons(['generate-invoice'], ['customerName', 'customerEmail', 'customerPhone']);
+    }
     window.history.pushState('Positron', 'Positron', $("meta[name=baseUrl]").attr("content") + "/ui/manage-order");
     init();
     getOrderItems(orderId);
@@ -51,10 +57,10 @@ function showOrderItems(data){
         table.row.add([
         	e.barcode,
         	e.productBrandName,
-        	e.quantity,
-        	e.mrp,
-        	e.sellingPrice,
-        	e.itemTotal,
+        	Number(e.quantity).formatLongNumber(),
+        	Number(e.mrp).formatLongNumber(),
+        	Number(e.sellingPrice).formatLongNumber(),
+        	Number(e.itemTotal).formatLongNumber(),
         	buttonHtml
         ]).draw();
         total += e.itemTotal;
@@ -113,9 +119,9 @@ function displayEditItem(prodId){
 function showItem(data){
     resetAllFormErrors();
 	$('#edit-item-modal').modal('toggle');
-	$('#edit-item-form input[name=barcode]').val(data.barcode);
-	$('#edit-item-form input[name=quantity]').val(data.quantity);
-	$('#edit-item-form input[name=sellingPrice]').val(data.sellingPrice);
+	$('#edit-item-form input[name=barcode]').val(Number(data.barcode).formatLongNumber());
+	$('#edit-item-form input[name=quantity]').val(Number(data.quantity).formatLongNumber());
+	$('#edit-item-form input[name=sellingPrice]').val(Number(data.sellingPrice).formatLongNumber());
 }
 
 function updateItem(event){

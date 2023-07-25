@@ -27,11 +27,6 @@ public class ReportDao extends AbstractDao{
             "AND (:category IS NULL OR b.category = :category) "+
             "GROUP BY b.brand, b.category";
 
-    public static String brand_report = "SELECT b.brand, b.category from BrandPojo b "+
-            "WHERE (:brand IS NULL or b.brand=:brand) "+
-            "AND(:category IS NULL or b.category=:category)";
-
-
     public List<Object[]> getAllSalesData(LocalDateTime startDateTime, LocalDateTime endDateTime, String brand, String category) {
         TypedQuery<Object[]> query = em().createQuery(sales_report, Object[].class);
         query.setParameter("startDateTime", startDateTime);
@@ -44,13 +39,6 @@ public class ReportDao extends AbstractDao{
 
     public List<Object[]> getAllInventoryData(String brand, String category){
         TypedQuery<Object[]> query = em().createQuery(inventory_report, Object[].class);
-        query.setParameter("brand", brand);
-        query.setParameter("category", category);
-        return query.getResultList();
-    }
-
-    public List<Object[]> getAllBrandData(String brand, String category){
-        TypedQuery<Object[]> query = em().createQuery(brand_report, Object[].class);
         query.setParameter("brand", brand);
         query.setParameter("category", category);
         return query.getResultList();

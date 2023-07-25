@@ -12,7 +12,7 @@ import java.util.List;
 @XmlRootElement
 public class InvoiceForm {
     private String timestamp;
-    private int invoiceNumber;
+    private String invoiceNumber;
     private String customerName;
     private String email;
     private String phone;

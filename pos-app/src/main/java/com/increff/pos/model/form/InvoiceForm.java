@@ -1,10 +1,8 @@
 package com.increff.pos.model.form;
 
 import com.increff.pos.model.data.InvoiceItemData;
-
 import lombok.Getter;
 import lombok.Setter;
-
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;

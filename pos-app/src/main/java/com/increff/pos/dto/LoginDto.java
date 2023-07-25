@@ -1,17 +1,13 @@
 package com.increff.pos.dto;
+
 import com.increff.pos.api.UserApi;
-import com.increff.pos.controller.AbstractUiController;
-import com.increff.pos.dto.helper.LoginDtoHelper;
 import com.increff.pos.exception.ApiException;
 import com.increff.pos.model.form.LoginForm;
 import com.increff.pos.pojo.UserPojo;
 import com.increff.pos.util.SecurityUtil;
-import com.increff.pos.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

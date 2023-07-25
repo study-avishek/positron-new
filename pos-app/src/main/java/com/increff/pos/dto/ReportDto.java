@@ -7,7 +7,6 @@ import com.increff.pos.model.data.InventoryReportData;
 import com.increff.pos.model.data.SalesReportData;
 import com.increff.pos.model.form.BrandForm;
 import com.increff.pos.model.form.SalesReportForm;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static com.increff.pos.util.ValidationUtil.checkValid;
 
 @Component
 public class ReportDto {
@@ -46,20 +43,6 @@ public class ReportDto {
         }
         return list2;
 
-    }
-
-    public List<BrandData> getAllBrandData(BrandForm form) throws ApiException{
-        String brand = (Objects.equals(form.getBrand(), "") ? null: form.getBrand());
-        String category = (Objects.equals(form.getCategory(), "") ?null: form.getCategory());
-        List<Object[]> list1 = api.getAllBrandData(brand, category);
-        List<BrandData> list2 = new ArrayList<>();
-        for(Object[] obj: list1){
-            BrandData brandData = new BrandData();
-            brandData.setBrand((String) obj[0]);
-            brandData.setCategory((String) obj[1]);
-            list2.add(brandData);
-        }
-        return list2;
     }
 
     public List<InventoryReportData> getAllInventoryData(BrandForm form) throws ApiException{

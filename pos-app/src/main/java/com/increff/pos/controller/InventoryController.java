@@ -3,18 +3,15 @@ package com.increff.pos.controller;
 
 import com.increff.pos.dto.InventoryDto;
 import com.increff.pos.exception.ApiException;
-
 import com.increff.pos.exception.UploadException;
 import com.increff.pos.model.data.InventoryData;
 import com.increff.pos.model.form.InventoryForm;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**

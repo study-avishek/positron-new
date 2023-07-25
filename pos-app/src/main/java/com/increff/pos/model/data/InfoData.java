@@ -1,12 +1,12 @@
 package com.increff.pos.model.data;
 
-import java.io.Serializable;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
 
 @Component
 @Scope(value="session", proxyMode=ScopedProxyMode.TARGET_CLASS)

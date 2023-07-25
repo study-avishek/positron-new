@@ -7,15 +7,10 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
-import static net.bytebuddy.matcher.ElementMatchers.isGetter;
-import static org.springframework.beans.PropertyAccessorUtils.getPropertyName;
 
 public class ValidationUtil {
     public static <T> Set<ConstraintViolation<T>> validate(T form) {

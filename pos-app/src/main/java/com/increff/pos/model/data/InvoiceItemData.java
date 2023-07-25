@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 public class InvoiceItemData {
     private String name;
-    private int quantity;
-    private Double sellingPrice;
-    private Double mrp;
-    private int itemNumber;
+    private String quantity;
+    private String sellingPrice;
+    private String mrp;
+    private String itemNumber;
 }

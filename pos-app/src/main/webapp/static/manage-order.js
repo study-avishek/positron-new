@@ -79,8 +79,8 @@ function displayOrderList(data){
     	table.row.add([
     		e.id,
     		badge,
-    		e.itemCount,
-    		roundUpToTwoDecimalPlaces(e.revenue) + ' Rs',
+    		Number(e.itemCount).formatLongNumber(),
+    		'Rs. ' + roundUpToTwoDecimalPlaces(e.revenue),
     		total
     		]);
     }

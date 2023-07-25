@@ -1,0 +1,233 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > OutwardOrderDto</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.increff.pos.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: OutwardOrderDto (com.increff.pos.dto)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OutwardOrderDto</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (38/38)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">OutwardOrderDto$$EnhancerBySpringCGLIB$$30696ce0</td>
+  </tr>
+  <tr>
+    <td class="name">OutwardOrderDto$$EnhancerBySpringCGLIB$$30696ce0$$FastClassBySpringCGLIB$$a7e88fa9</td>
+  </tr>
+  <tr>
+    <td class="name">OutwardOrderDto$$FastClassBySpringCGLIB$$b9671788</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (38/38)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.increff.pos.dto;
+&nbsp;
+&nbsp;import com.increff.pos.api.OutwardOrderApi;
+&nbsp;import com.increff.pos.api.flow.OutwardOrderFlow;
+&nbsp;import com.increff.pos.exception.ApiException;
+&nbsp;import com.increff.pos.model.data.OutwardOrderData;
+&nbsp;import com.increff.pos.model.enums.OrderStatus;
+&nbsp;import com.increff.pos.model.form.CustomerForm;
+&nbsp;import com.increff.pos.model.form.InvoiceForm;
+&nbsp;import com.increff.pos.pojo.OutwardOrderPojo;
+&nbsp;import com.increff.pos.util.ValidationUtil;
+&nbsp;import io.swagger.annotations.Api;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.core.io.FileSystemResource;
+&nbsp;import org.springframework.http.HttpHeaders;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.MediaType;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.web.client.RestTemplate;
+&nbsp;
+&nbsp;import javax.transaction.RollbackException;
+&nbsp;import javax.transaction.Transactional;
+&nbsp;import java.io.File;
+&nbsp;import java.io.FileOutputStream;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Base64;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import static org.springframework.http.ResponseEntity.status;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;public class OutwardOrderDto {</b>
+&nbsp;    @Autowired
+&nbsp;    private OutwardOrderApi api;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private OutwardOrderFlow flow;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private RestTemplate restTemplate;
+&nbsp;
+&nbsp;
+&nbsp;    private ResponseEntity&lt;FileSystemResource&gt; responseOut;
+&nbsp;
+&nbsp;    @Value(&quot;${pdf.filepath}&quot;)
+&nbsp;    private String pdfFilePath;
+&nbsp;
+<b class="fc">&nbsp;    private String invoiceAppUrl = &quot;http://localhost:9050/invoice/api/invoice&quot;;;</b>
+&nbsp;
+&nbsp;    public OutwardOrderData add(){
+<b class="fc">&nbsp;        OutwardOrderPojo p = new OutwardOrderPojo();</b>
+<b class="fc">&nbsp;        OutwardOrderPojo temp = api.add(p);</b>
+<b class="fc">&nbsp;        OutwardOrderData data = new OutwardOrderData();</b>
+<b class="fc">&nbsp;        data.setId(temp.getId());</b>
+<b class="fc">&nbsp;        data.setOrderStatus(temp.getOrderStatus());</b>
+<b class="fc">&nbsp;        return data;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void delete(int id) throws ApiException {
+<b class="fc">&nbsp;        flow.deleteItemsByOrderId(id) ;</b>
+<b class="fc">&nbsp;        api.delete(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;OutwardOrderData&gt; getAll() throws ApiException{
+<b class="fc">&nbsp;        List&lt;Object[]&gt; list1 =  api.getAll();</b>
+<b class="fc">&nbsp;        List&lt;OutwardOrderData&gt; list2 = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;        for(Object[] obj: list1){</b>
+<b class="fc">&nbsp;            OutwardOrderData data = new OutwardOrderData();</b>
+<b class="fc">&nbsp;            data.setId((int)obj[0]);</b>
+<b class="fc">&nbsp;            data.setOrderStatus(OrderStatus.valueOf(obj[1].toString()));</b>
+<b class="fc">&nbsp;            data.setItemCount((long)obj[2]);</b>
+<b class="fc">&nbsp;            data.setRevenue((double)obj[3]);</b>
+<b class="fc">&nbsp;            list2.add(data);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        return list2;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional(rollbackOn = ApiException.class)
+&nbsp;    public ResponseEntity complete(int id, CustomerForm customerForm) throws ApiException, IOException {
+&nbsp;        try {
+<b class="fc">&nbsp;            ValidationUtil.checkValid(customerForm);</b>
+<b class="fc">&nbsp;            InvoiceForm form = flow.complete(id, customerForm);</b>
+&nbsp;
+<b class="fc">&nbsp;            ResponseEntity&lt;String&gt; response = restTemplate.postForEntity(invoiceAppUrl, form, String.class);</b>
+<b class="fc">&nbsp;            String encodedString = response.getBody();</b>
+<b class="fc">&nbsp;            byte[] pdfBytes = Base64.getDecoder().decode(encodedString);</b>
+&nbsp;
+<b class="fc">&nbsp;            File pdfFile = new File(pdfFilePath + &quot;/invoice-&quot; + id + &quot;.pdf&quot;);</b>
+<b class="fc">&nbsp;            FileOutputStream out = new FileOutputStream(pdfFile);</b>
+<b class="fc">&nbsp;            out.write(pdfBytes);</b>
+<b class="fc">&nbsp;            out.close();</b>
+&nbsp;
+<b class="fc">&nbsp;            HttpHeaders headers = new HttpHeaders();</b>
+<b class="fc">&nbsp;            headers.setContentType(MediaType.APPLICATION_PDF);</b>
+<b class="fc">&nbsp;            headers.setContentDispositionFormData(&quot;attachment&quot;, pdfFile.getName());</b>
+&nbsp;
+<b class="fc">&nbsp;            responseOut = new ResponseEntity&lt;&gt;(</b>
+&nbsp;                    new FileSystemResource(pdfFile),
+&nbsp;                    headers,
+&nbsp;                    HttpStatus.OK
+&nbsp;            );
+<b class="fc">&nbsp;            api.changeStatus(id);</b>
+<b class="fc">&nbsp;            return responseOut;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        catch (ApiException e){</b>
+<b class="fc">&nbsp;            throw new ApiException(&quot;Invoice generation failed&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-25 11:26</div>
+</div>
+</body>
+</html>

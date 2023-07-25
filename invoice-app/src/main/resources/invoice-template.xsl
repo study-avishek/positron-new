@@ -125,16 +125,16 @@
                                                 <fo:block><xsl:value-of select="name"/></fo:block>
                                             </fo:table-cell>
                                             <fo:table-cell padding="1mm 2mm" text-align="right">
-                                                <fo:block><xsl:value-of select="format-number(quantity, '#.0')"/></fo:block>
+                                                <fo:block><xsl:value-of select="format-number(quantity, '0.0')"/></fo:block>
                                             </fo:table-cell>
                                             <fo:table-cell padding="1mm 2mm" text-align="right">
-                                                <fo:block><xsl:value-of select="format-number(sellingPrice, '#.00')"/></fo:block>
+                                                <fo:block><xsl:value-of select="format-number(sellingPrice, '0.00')"/></fo:block>
                                             </fo:table-cell>
                                             <fo:table-cell padding="1mm 2mm" text-align="right">
-                                                <fo:block><xsl:value-of select="format-number(mrp, '#.00')"/></fo:block>
+                                                <fo:block><xsl:value-of select="format-number(mrp, '0.00')"/></fo:block>
                                             </fo:table-cell>
                                             <fo:table-cell padding="1mm 2mm" text-align="right">
-                                                <fo:block><xsl:value-of select="format-number(quantity * sellingPrice, '#.00')"/></fo:block>
+                                                <fo:block><xsl:value-of select="format-number(quantity * sellingPrice, '0.00')"/></fo:block>
                                             </fo:table-cell>
                                         </fo:table-row>
                                     </xsl:for-each>
@@ -194,7 +194,7 @@
                         <fo:block>
                             <xsl:choose>
                                 <xsl:when test="itemNumber">
-                                    <xsl:value-of select="format-number($subtotal, '#.00')"/> Rs
+                                    <xsl:value-of select="format-number($subtotal, '0.00')"/> Rs
                                 </xsl:when>
                                 <xsl:otherwise>
                                     0.00 Rs
@@ -213,7 +213,7 @@
                         <fo:block>
                             <xsl:choose>
                                 <xsl:when test="itemNumber">
-                                    <xsl:value-of select="format-number($cgst, '#.00')"/> Rs
+                                    <xsl:value-of select="format-number($cgst, '0.00')"/> Rs
                                 </xsl:when>
                                 <xsl:otherwise>
                                     0.00 Rs
@@ -232,7 +232,7 @@
                         <fo:block>
                             <xsl:choose>
                                 <xsl:when test="itemNumber">
-                                    <xsl:value-of select="format-number($total, '#.00')"/> Rs
+                                    <xsl:value-of select="format-number($total, '0.00')"/> Rs
                                 </xsl:when>
                                 <xsl:otherwise>
                                     0.00 Rs

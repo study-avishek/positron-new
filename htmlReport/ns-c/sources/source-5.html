@@ -1,0 +1,293 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > OrderItemDto</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.increff.pos.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: OrderItemDto (com.increff.pos.dto)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OrderItemDto</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.6%
+  </span>
+  <span class="absValue">
+    (76/83)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">OrderItemDto$$EnhancerBySpringCGLIB$$1225c5b</td>
+  </tr>
+  <tr>
+    <td class="name">OrderItemDto$$EnhancerBySpringCGLIB$$1225c5b$$FastClassBySpringCGLIB$$77ff1b44</td>
+  </tr>
+  <tr>
+    <td class="name">OrderItemDto$$FastClassBySpringCGLIB$$f18ecad1</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.6%
+  </span>
+  <span class="absValue">
+    (76/83)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.increff.pos.dto;
+&nbsp;
+&nbsp;import com.increff.pos.api.OrderItemApi;
+&nbsp;import com.increff.pos.api.flow.OrderItemFlow;
+&nbsp;import com.increff.pos.exception.ApiException;
+&nbsp;import com.increff.pos.exception.UploadException;
+&nbsp;import com.increff.pos.model.data.OrderItemData;
+&nbsp;import com.increff.pos.model.form.OrderItemForm;
+&nbsp;import com.increff.pos.pojo.OrderItemPojo;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;
+&nbsp;import javax.transaction.Transactional;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.nio.charset.StandardCharsets;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import static com.increff.pos.dto.helper.OrderItemDtoHelper.convert;
+&nbsp;import static com.increff.pos.util.StringUtil.toLowerCase;
+&nbsp;import static com.increff.pos.util.StringUtil.trimZeros;
+&nbsp;import static com.increff.pos.util.TsvUtil.createRow;
+&nbsp;import static com.increff.pos.util.TsvUtil.parseHeader;
+&nbsp;import static com.increff.pos.util.ValidationUtil.checkValid;
+&nbsp;import static com.increff.pos.util.ValidationUtil.checkValidMultiple;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;public class OrderItemDto {</b>
+&nbsp;    @Autowired
+&nbsp;    private OrderItemApi api;
+&nbsp;    @Autowired
+&nbsp;    private OrderItemFlow flow;
+&nbsp;
+&nbsp;    public void add(int orderId, OrderItemForm form) throws ApiException {
+<b class="fc">&nbsp;        flow.checkOrderId(orderId);</b>
+<b class="fc">&nbsp;        normalize(form);</b>
+<b class="fc">&nbsp;        checkValid(form);</b>
+<b class="fc">&nbsp;        int prodId = flow.getId(form.getBarcode());</b>
+<b class="fc">&nbsp;        OrderItemPojo p = convert(form, orderId, prodId, flow.getMrp(prodId));</b>
+<b class="fc">&nbsp;        checkPrice(p);</b>
+<b class="fc">&nbsp;        OrderItemPojo existing = api.getCheck(orderId, p.getProdId());</b>
+&nbsp;
+<b class="fc">&nbsp;        int neededQuantity = p.getQuantity() + ((existing != null) ? existing.getQuantity() : 0);</b>
+<b class="fc">&nbsp;        int effectiveInventory = getInventorySize(p.getProdId()) - api.lockedInventory(p.getProdId());</b>
+&nbsp;
+<b class="fc">&nbsp;        if (p.getQuantity() &gt; effectiveInventory) {</b>
+<b class="fc">&nbsp;            throw new ApiException(&quot;Total available quantity: &quot; + Math.max(effectiveInventory,0));</b>
+<b class="fc">&nbsp;        } else if(existing != null){</b>
+<b class="fc">&nbsp;            p.setQuantity(neededQuantity);</b>
+<b class="fc">&nbsp;            api.update(orderId, p);</b>
+&nbsp;        }
+&nbsp;        else{
+<b class="fc">&nbsp;            api.add(p);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void addAll(int id,List&lt;OrderItemForm&gt; forms, List&lt;List&lt;String&gt;&gt; errors){
+<b class="fc">&nbsp;        int i = 1;</b>
+<b class="fc">&nbsp;        for(OrderItemForm form: forms){</b>
+&nbsp;            try{
+<b class="fc">&nbsp;                add(id, form);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            catch (ApiException e){</b>
+<b class="nc">&nbsp;                errors.add(createRow(i, &quot;Barcode: &quot; + form.getBarcode() + &quot;\n&quot; +</b>
+<b class="nc">&nbsp;                        &quot;Quantity: &quot; + form.getQuantity() + &quot;\n&quot; +</b>
+<b class="nc">&nbsp;                        &quot;Selling Price: &quot; + form.getSellingPrice() + &quot;\n&quot;, e.getMessage()));</b>
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;            i++;</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional(rollbackOn = UploadException.class)
+&nbsp;    public void tsvUpload(int id, MultipartFile file) throws UploadException {
+<b class="fc">&nbsp;        List&lt;List&lt;String&gt;&gt; errors = new ArrayList&lt;&gt;();</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            List&lt;OrderItemForm&gt; forms = tsvToCurrentOrderForm(file, errors);</b>
+<b class="fc">&nbsp;            if(errors.size() &gt; 0) throw new UploadException(&quot;Order upload failed&quot;, errors);</b>
+<b class="fc">&nbsp;            checkValidMultiple(forms, errors);</b>
+<b class="fc">&nbsp;            if(errors.size() &gt; 0) throw new UploadException(&quot;Order upload failed&quot;, errors);</b>
+<b class="fc">&nbsp;            addAll(id, forms, errors);</b>
+<b class="fc">&nbsp;            if(errors.size() &gt; 0) throw new UploadException(&quot;Order upload failed&quot;, errors);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (IOException e){</b>
+<b class="nc">&nbsp;            throw new UploadException(&quot;Something went wrong! make sure tsv contains less than 5000 lines&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public OrderItemData get(int id, int prodId) throws ApiException {
+<b class="fc">&nbsp;        OrderItemPojo p = api.getCheck(id, prodId);</b>
+<b class="fc">&nbsp;        return convert(p, flow.getBarcode(prodId), flow.getProductBrandName(prodId), flow.getMrp(prodId));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;OrderItemData&gt; getAll(int id) throws ApiException {
+<b class="fc">&nbsp;        List&lt;OrderItemPojo&gt; list = api.getAll(id);</b>
+<b class="fc">&nbsp;        List&lt;OrderItemData&gt; list2 = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (OrderItemPojo p : list) {</b>
+<b class="fc">&nbsp;            int prodId = p.getProdId();</b>
+<b class="fc">&nbsp;            list2.add(convert(p, flow.getBarcode(prodId), flow.getProductBrandName(prodId), flow.getMrp(prodId)));</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return list2;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void update(int id, OrderItemForm form) throws ApiException {
+<b class="fc">&nbsp;        normalize(form);</b>
+<b class="fc">&nbsp;        checkValid(form);</b>
+&nbsp;
+<b class="fc">&nbsp;        int prodId = flow.getId(form.getBarcode());</b>
+<b class="fc">&nbsp;        OrderItemPojo p = convert(form, id, prodId, flow.getMrp(prodId));</b>
+<b class="fc">&nbsp;        checkPrice(p);</b>
+<b class="fc">&nbsp;        OrderItemPojo existing = api.getCheck(id, p.getProdId());</b>
+<b class="fc">&nbsp;        int effectiveInventory = getInventorySize(p.getProdId()) - api.lockedInventory(p.getProdId()) + (existing != null? existing.getQuantity():0);</b>
+<b class="fc">&nbsp;        if (p.getQuantity() &gt; effectiveInventory) {</b>
+<b class="fc">&nbsp;            throw new ApiException(&quot;Total available quantity: &quot; + Math.max(effectiveInventory,0));</b>
+&nbsp;        }
+<b class="fc">&nbsp;        api.update(id, p);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void delete(int id, int prodId) throws ApiException {
+<b class="fc">&nbsp;        api.delete(id, prodId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getInventorySize(int prodId) throws ApiException {
+<b class="fc">&nbsp;        return flow.getQuantity(flow.getBarcode(prodId));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void checkPrice(OrderItemPojo p) throws ApiException{
+<b class="fc">&nbsp;        flow.checkPrice(p);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;OrderItemForm&gt; tsvToCurrentOrderForm(MultipartFile file, List&lt;List&lt;String&gt;&gt; errors) throws UploadException, IOException {
+<b class="fc">&nbsp;        List&lt;OrderItemForm&gt; objectsList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));</b>
+<b class="fc">&nbsp;        HashMap&lt;String, Integer&gt; map = parseHeader(br.readLine(), new String[]{&quot;barcode&quot;,&quot;quantity&quot;,&quot;selling price&quot;});</b>
+&nbsp;        String line;
+<b class="fc">&nbsp;        int i = 1;</b>
+<b class="fc">&nbsp;        while ((line = br.readLine()) != null) {</b>
+<b class="fc">&nbsp;            if (line.trim().isEmpty()) {</b>
+<b class="fc">&nbsp;                continue;</b>
+&nbsp;            }
+<b class="fc">&nbsp;            String[] columns = line.split(&quot;\t&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;            if (columns.length != 3) {</b>
+<b class="nc">&nbsp;                errors.add(createRow(i, &quot;Column size: &quot; + columns.length, &quot;Column size must be 2&quot;));</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            OrderItemForm form = createOrderForm(columns, map, errors, i);</b>
+<b class="fc">&nbsp;            objectsList.add(form);</b>
+<b class="fc">&nbsp;            i++;</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        if(br.readLine() != null) throw new UploadException(&quot;Input contains more than 5000 lines&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        return objectsList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public OrderItemForm createOrderForm(String[] columns, HashMap&lt;String, Integer&gt; map, List&lt;List&lt;String&gt;&gt; errors, int i){
+<b class="fc">&nbsp;        OrderItemForm form = new OrderItemForm();</b>
+<b class="fc">&nbsp;        form.setBarcode(columns[map.get(&quot;barcode&quot;)]);</b>
+<b class="fc">&nbsp;        form.setQuantity(columns[map.get(&quot;quantity&quot;)]);</b>
+<b class="fc">&nbsp;        form.setSellingPrice(columns[map.get(&quot;selling price&quot;)]);</b>
+<b class="fc">&nbsp;        normalize(form);</b>
+<b class="fc">&nbsp;        return form;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void normalize(OrderItemForm form){
+<b class="fc">&nbsp;        form.setBarcode(toLowerCase(form.getBarcode()));</b>
+<b class="fc">&nbsp;        form.setQuantity(trimZeros(form.getQuantity()));</b>
+<b class="fc">&nbsp;        form.setSellingPrice(trimZeros(form.getSellingPrice()));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-25 11:26</div>
+</div>
+</body>
+</html>

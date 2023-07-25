@@ -3,7 +3,6 @@ package com.increff.pos.dto;
 import com.increff.pos.api.InventoryApi;
 import com.increff.pos.api.flow.InventoryFlow;
 import com.increff.pos.exception.ApiException;
-
 import com.increff.pos.exception.UploadException;
 import com.increff.pos.model.data.InventoryData;
 import com.increff.pos.model.form.InventoryForm;
@@ -57,7 +56,7 @@ public class InventoryDto {
 
             api.addAll(inventoryPojos);
         }
-        catch (Exception e){
+        catch (IOException e){
             throw new UploadException("Something went wrong! make sure tsv contains less than 5000 lines");
         }
     }
@@ -92,8 +91,8 @@ public class InventoryDto {
         List<InventoryForm> objectsList = new ArrayList<>();
         HashMap<String, Integer> map = parseHeader(br.readLine(), new String[]{"barcode", "quantity"});
         String line;
-        while ((line = br.readLine()) != null) {
-            if (line.trim().isEmpty() && i <= 5000) {
+        while (i <= 5000 && (line = br.readLine()) != null) {
+            if (line.trim().isEmpty()) {
                 i++;
                 continue;
             }

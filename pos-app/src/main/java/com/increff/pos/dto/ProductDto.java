@@ -1,5 +1,17 @@
 package com.increff.pos.dto;
 
+import com.increff.pos.api.ProductApi;
+import com.increff.pos.api.flow.ProductFlow;
+import com.increff.pos.exception.ApiException;
+import com.increff.pos.exception.UploadException;
+import com.increff.pos.model.data.ProductData;
+import com.increff.pos.model.form.ProductForm;
+import com.increff.pos.pojo.BrandPojo;
+import com.increff.pos.pojo.ProductPojo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,23 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-
-import com.increff.pos.api.ProductApi;
-import com.increff.pos.api.flow.ProductFlow;
-
-import com.increff.pos.exception.UploadException;
-
-import com.increff.pos.model.data.ProductData;
-import com.increff.pos.model.form.ProductForm;
-
-import com.increff.pos.pojo.BrandPojo;
-import com.increff.pos.pojo.ProductPojo;
-
-import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import com.increff.pos.exception.ApiException;
-import org.springframework.web.multipart.MultipartFile;
 
 import static com.increff.pos.dto.helper.ProductDtoHelper.*;
 import static com.increff.pos.util.TsvUtil.createRow;
@@ -131,7 +126,7 @@ public class ProductDto {
         String line;
         int i = 1;
         HashMap<String, Integer> map = parseHeader(br.readLine(), new String[]{"name","brand","category","barcode","mrp"});
-        while ((line = br.readLine()) != null && i < 5000) {
+        while (i <= 5000 && (line = br.readLine()) != null) {
             if (line.trim().isEmpty()) {
                 i++;
                 continue;

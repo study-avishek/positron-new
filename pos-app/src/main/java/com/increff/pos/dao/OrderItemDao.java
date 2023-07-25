@@ -1,17 +1,14 @@
 package com.increff.pos.dao;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-
 import com.increff.pos.model.enums.OrderStatus;
 import com.increff.pos.pojo.OrderItemPojo;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public class OrderItemDao extends AbstractDao{

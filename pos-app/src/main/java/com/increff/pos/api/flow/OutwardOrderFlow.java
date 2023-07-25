@@ -1,17 +1,20 @@
 package com.increff.pos.api.flow;
 
-import com.increff.pos.api.*;
+import com.increff.pos.api.InventoryApi;
+import com.increff.pos.api.OrderItemApi;
+import com.increff.pos.api.ProductApi;
 import com.increff.pos.exception.ApiException;
 import com.increff.pos.model.data.InvoiceItemData;
 import com.increff.pos.model.form.CustomerForm;
 import com.increff.pos.model.form.InvoiceForm;
-import com.increff.pos.pojo.OrderItemPojo;
 import com.increff.pos.pojo.InventoryPojo;
+import com.increff.pos.pojo.OrderItemPojo;
 import com.increff.pos.pojo.ProductPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +41,7 @@ public class OutwardOrderFlow {
 
     public InvoiceForm complete(int id, CustomerForm customerForm) throws ApiException {
         List<OrderItemPojo> orderItemPojos = orderItemApi.getAll(id);
+        DecimalFormat df = new DecimalFormat("0.#####");
         if(orderItemPojos.size() == 0) {
             throw new ApiException("Empty order cannot be invoiced");
         }
@@ -62,10 +66,10 @@ public class OutwardOrderFlow {
             ProductPojo productPojo = productApi.getCheck(orderItemPojo.getProdId());
 
             invoiceItemData.setName(orderItemFlow.getProductBrandName(orderItemPojo.getProdId()));
-            invoiceItemData.setItemNumber(i++);
-            invoiceItemData.setMrp(productPojo.getMrp());
-            invoiceItemData.setQuantity(orderItemPojo.getQuantity());
-            invoiceItemData.setSellingPrice(orderItemPojo.getSellingPrice());
+            invoiceItemData.setItemNumber(df.format(i++));
+            invoiceItemData.setMrp(df.format(productPojo.getMrp()));
+            invoiceItemData.setQuantity(df.format(orderItemPojo.getQuantity()));
+            invoiceItemData.setSellingPrice(df.format(orderItemPojo.getSellingPrice()));
 
             list.add(invoiceItemData);
         }

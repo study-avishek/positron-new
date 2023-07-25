@@ -34,7 +34,7 @@ function showUpdateInventory(id){
             $("#displayProduct").val(data.prod);
             $("#displayBrand").val(data.brand);
             $("#displayCategory").val(data.category);
-            $("#displayQuantity").val(data.quantity);
+            $("#displayQuantity").val(Number(data.quantity).formatLongNumber());
             $("#inputQuantity").val('');
             $("#edit-inventory-modal").modal('toggle');
 
@@ -143,7 +143,7 @@ function displayInventoryList(data){
 		    e.prod,
 		    e.brand,
 		    e.category,
-		    e.quantity,
+		    Number(e.quantity).formatLongNumber(),
 		    buttonHtml
 		];
 		rows.push(col);

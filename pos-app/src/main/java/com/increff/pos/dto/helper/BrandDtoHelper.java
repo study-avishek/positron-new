@@ -5,8 +5,9 @@ import com.increff.pos.model.form.BrandForm;
 import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.util.StringUtil;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class BrandDtoHelper {
     public static BrandData convert(BrandPojo p) {

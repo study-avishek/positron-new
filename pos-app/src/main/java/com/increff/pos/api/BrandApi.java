@@ -1,14 +1,13 @@
 package com.increff.pos.api;
 
-import java.util.List;
-
-import javax.transaction.Transactional;
+import com.increff.pos.dao.BrandDao;
 import com.increff.pos.exception.ApiException;
+import com.increff.pos.pojo.BrandPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.increff.pos.dao.BrandDao;
-import com.increff.pos.pojo.BrandPojo;
+import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional

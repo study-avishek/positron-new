@@ -5,13 +5,10 @@ import com.increff.pos.dto.BrandDto;
 import com.increff.pos.exception.ApiException;
 import com.increff.pos.exception.UploadException;
 import com.increff.pos.model.data.BrandData;
-import com.increff.pos.model.data.DataTableResponse;
 import com.increff.pos.model.form.BrandForm;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -19,8 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @Api

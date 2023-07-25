@@ -3,7 +3,6 @@ package com.increff.pos.job;
 import com.increff.pos.dao.OrderItemDao;
 import com.increff.pos.dao.OutwardOrderDao;
 import com.increff.pos.dao.PosDaySaleDao;
-import com.increff.pos.exception.ApiException;
 import com.increff.pos.pojo.OutwardOrderPojo;
 import com.increff.pos.pojo.PosDaySalePojo;
 import org.springframework.beans.factory.annotation.Autowired;

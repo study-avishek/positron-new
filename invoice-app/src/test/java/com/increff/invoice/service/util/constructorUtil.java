@@ -14,15 +14,15 @@ public class constructorUtil {
         form.setCustomerName("test name");
         form.setEmail("test@test.com");
         form.setPhone("1234567890");
-        form.setInvoiceNumber(1234);
+        form.setInvoiceNumber("1234");
         form.setTimestamp("01-01-1900");
         List<InvoiceItemData> invoiceItemDataList = new ArrayList<>();
         for(int i = 0 ; i < n ; i++){
             InvoiceItemData invoiceItemData = new InvoiceItemData();
-            invoiceItemData.setItemNumber(i+1);
-            invoiceItemData.setMrp((double) (100 + i*10));
-            invoiceItemData.setQuantity(i+1);
-            invoiceItemData.setSellingPrice((double) (95+i*10));
+            invoiceItemData.setItemNumber(String.valueOf(i+1));
+            invoiceItemData.setMrp(String.valueOf((100 + i*10)));
+            invoiceItemData.setQuantity(String.valueOf(i+1));
+            invoiceItemData.setSellingPrice(String.valueOf((95+i*10)));
             invoiceItemData.setName("test product "+i);
             invoiceItemDataList.add(invoiceItemData);
         }

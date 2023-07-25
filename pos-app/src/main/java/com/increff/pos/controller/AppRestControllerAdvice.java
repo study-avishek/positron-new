@@ -1,23 +1,17 @@
 package com.increff.pos.controller;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.increff.pos.exception.ApiException;
 import com.increff.pos.exception.UploadException;
+import com.increff.pos.model.data.MessageData;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.increff.pos.model.data.MessageData;
-import com.increff.pos.exception.ApiException;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import org.springframework.web.util.NestedServletException;
-
-import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;

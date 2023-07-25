@@ -26,7 +26,7 @@
         <h3><span class="badge badge-pill badge-secondary ml-5">Grand total: <span class="total-amount">0</span> Rs.</span></h3>
         <h3 th:if="${param.id != null}"><span class="badge text-white badge-pill badge-warning ml-3">Order Id: <span th:text="${param.id}"></span></span></h3>
     </div>
-    <div class="modal" tabindex="-1" role="dialog" id="add-order-item-modal" th:if="${info.role == 'admin'}">
+    <div class="modal" tabindex="-1" role="dialog" id="add-order-item-modal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -218,6 +218,7 @@
                                        maxlength="30"
                                        pattern="^[a-zA-Z\s]+$"
                                        title="Customer length should contain alphabets only.Length 1-30"
+                                       required
                                 >
                             </div>
                         </div>
@@ -230,7 +231,8 @@
                                        class="form-control"
                                        id="customerEmail"
                                        name="email"
-                                       placeholder="enter customer email">
+                                       placeholder="enter customer email"
+                                       required>
                             </div>
                         </div>
 
@@ -244,6 +246,7 @@
                                        placeholder="enter customer phone"
                                        pattern="^[0-9]{10}$"
                                        title="Enter a valid phone number without country code"
+                                       required
                                 >
                             </div>
                         </div>
@@ -276,11 +279,11 @@
 
                 <div class="modal-body">
                     <div class="order-file">
-                        <input type="file" class="custom-file-input" id="orderFile" onchange="handleFileUpload('orderFile','orderFileName')">
+                        <input type="file" class="custom-file-input" id="orderFile" accept=".tsv" onchange="handleFileUpload('orderFile','orderFileName')">
                         <label class="custom-file-label" for="orderFile" id="orderFileName">Choose file</label>
                     </div>
                     <li class="list-group-item">Tsv should contain 3 headers named "barcode", "quantity" and "selling price"</li>
-                    <li class="list-group-item">Input should be limited to 5000 lines</li>
+                    <li class="list-group-item">Input should be limited to 500 lines</li>
                     <li class="list-group-item">All the row should contain 3 strings separated by tab</li>
                     <li class="list-group-item">If duplicate barcode entries are provided. Quantity will be added and selling price will be updated to the latest price</li>
                     <a th:href="@{/api/resource/order.tsv}" target="_blank">Download Sample</a>
@@ -346,7 +349,7 @@
         </div>
     </div>
 
-<div class="modal" tabindex="-1" role="dialog" id="delete-order-confirmation" th:if="${info.role == 'admin'}">
+<div class="modal" tabindex="-1" role="dialog" id="delete-order-confirmation">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
 

@@ -1,21 +1,14 @@
 package com.increff.pos.api;
 
-import java.util.List;
-import java.util.Objects;
-
-import javax.transaction.Transactional;
-
 import com.increff.pos.dao.ProductDao;
 import com.increff.pos.exception.ApiException;
 import com.increff.pos.pojo.ProductPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Gets normalized and POJO converted data from DTO
- * Applies buisness logic and sends the POJO to DAO layer for DB storing
- * Retrives data as POJO from DAO layer and sends to DTO layer
- */
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -24,7 +17,6 @@ public class ProductApi {
     @Autowired
     private ProductDao dao;
 
-    //Checks if the barcode is already present in the DB or not and sends the POJO to DAO layer
     public int add(ProductPojo p) throws ApiException {
         ProductPojo temp = dao.select(p.getBarcode());
         if(temp != null) {

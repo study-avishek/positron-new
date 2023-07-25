@@ -9,12 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class AppUiController extends AbstractUiController {
 
-//	@RequestMapping("/*")
-//	@ResponseStatus(HttpStatus.NOT_FOUND)
-//	public ModelAndView handleUnmatchedRequests() {
-//		return mav("notfound.html");
-//	}
-
 	@RequestMapping(value = "/ui/home")
 	public ModelAndView home() {
 		return mav("home.html");

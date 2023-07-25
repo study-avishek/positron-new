@@ -3,7 +3,6 @@ package com.increff.pos.dto.helper;
 import com.increff.pos.model.data.OrderItemData;
 import com.increff.pos.model.form.OrderItemForm;
 import com.increff.pos.pojo.OrderItemPojo;
-import com.increff.pos.util.StringUtil;
 
 import static com.increff.pos.util.StringUtil.toLowerCase;
 import static com.increff.pos.util.StringUtil.trimZeros;

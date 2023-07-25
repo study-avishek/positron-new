@@ -1,7 +1,6 @@
 package com.increff.pos.dto;
 
 import com.increff.pos.api.PosDaySaleApi;
-import com.increff.pos.dto.helper.PosDaySaleDtoHelper;
 import com.increff.pos.exception.ApiException;
 import com.increff.pos.model.data.PosDaySaleData;
 import com.increff.pos.pojo.PosDaySalePojo;

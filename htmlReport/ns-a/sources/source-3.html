@@ -1,0 +1,167 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AppUiController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.increff.pos.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: AppUiController (com.increff.pos.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AppUiController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    8.3%
+  </span>
+  <span class="absValue">
+    (1/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    8.3%
+  </span>
+  <span class="absValue">
+    (1/12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.increff.pos.controller;
+&nbsp;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.stereotype.Controller;
+&nbsp;import org.springframework.web.bind.annotation.RequestMapping;
+&nbsp;import org.springframework.web.bind.annotation.ResponseStatus;
+&nbsp;import org.springframework.web.servlet.ModelAndView;
+&nbsp;
+&nbsp;@Controller
+<b class="fc">&nbsp;public class AppUiController extends AbstractUiController {</b>
+&nbsp;
+&nbsp;//	@RequestMapping(&quot;/*&quot;)
+&nbsp;//	@ResponseStatus(HttpStatus.NOT_FOUND)
+&nbsp;//	public ModelAndView handleUnmatchedRequests() {
+&nbsp;//		return mav(&quot;notfound.html&quot;);
+&nbsp;//	}
+&nbsp;
+&nbsp;	@RequestMapping(value = &quot;/ui/home&quot;)
+&nbsp;	public ModelAndView home() {
+<b class="nc">&nbsp;		return mav(&quot;home.html&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@RequestMapping(value = &quot;/ui/pos&quot;)
+&nbsp;	public ModelAndView pos() {
+<b class="nc">&nbsp;		return mav(&quot;pos.html&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@RequestMapping(value = &quot;/ui/brand&quot;)
+&nbsp;	public ModelAndView brand() {
+<b class="nc">&nbsp;		return mav(&quot;brand.html&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@RequestMapping(value = &quot;/ui/product&quot;)
+&nbsp;	public ModelAndView product() {
+<b class="nc">&nbsp;		return mav(&quot;product.html&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@RequestMapping(value = &quot;/ui/inventory&quot;)
+&nbsp;	public ModelAndView inventory() {
+<b class="nc">&nbsp;		return mav(&quot;inventory.html&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@RequestMapping(value = &quot;/ui/order&quot;)
+&nbsp;	public ModelAndView order() {
+<b class="nc">&nbsp;		return mav(&quot;order.html&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;
+&nbsp;	@RequestMapping(value = &quot;/ui/daily-report&quot;)
+<b class="nc">&nbsp;	public ModelAndView dailyReport(){return mav(&quot;pos-day-sale.html&quot;);}</b>
+&nbsp;
+&nbsp;	@RequestMapping(value = &quot;/ui/brand/report&quot;)
+<b class="nc">&nbsp;	public ModelAndView brandReport(){return mav(&quot;brand-report.html&quot;);}</b>
+&nbsp;
+&nbsp;	@RequestMapping(value = &quot;/ui/inventory/report&quot;)
+<b class="nc">&nbsp;	public ModelAndView inventoryReport(){return mav(&quot;inventory-report.html&quot;);}</b>
+&nbsp;
+&nbsp;	@RequestMapping(value = &quot;/ui/manage-order&quot;)
+<b class="nc">&nbsp;	public ModelAndView manageOrder(){return mav(&quot;manage-order.html&quot;);}</b>
+&nbsp;
+&nbsp;	@RequestMapping(value = &quot;/ui/sales/report&quot;)
+<b class="nc">&nbsp;	public ModelAndView salesReport(){return mav(&quot;sales-report.html&quot;);}</b>
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-25 11:26</div>
+</div>
+</body>
+</html>

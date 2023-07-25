@@ -1,14 +1,10 @@
 package com.increff.pos.dao;
 
-import java.util.List;
-
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-
+import com.increff.pos.pojo.UserPojo;
 import org.springframework.stereotype.Repository;
 
-import com.increff.pos.pojo.UserPojo;
+import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 @Repository
 public class UserDao extends AbstractDao {

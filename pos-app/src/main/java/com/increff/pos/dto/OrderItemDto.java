@@ -138,8 +138,9 @@ public class OrderItemDto {
         HashMap<String, Integer> map = parseHeader(br.readLine(), new String[]{"barcode","quantity","selling price"});
         String line;
         int i = 1;
-        while ((line = br.readLine()) != null) {
+        while (i <= 500 && (line = br.readLine()) != null) {
             if (line.trim().isEmpty()) {
+                i++;
                 continue;
             }
             String[] columns = line.split("\t");

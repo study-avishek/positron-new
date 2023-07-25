@@ -3,7 +3,8 @@ package com.increff.pos.model.form;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter

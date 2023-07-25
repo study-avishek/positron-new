@@ -30,12 +30,6 @@ public class ReportController {
         return dto.getAllSalesData(form);
     }
 
-    @ApiOperation(value="Get list of brand report")
-    @RequestMapping(path="/api/report/brands", method = RequestMethod.POST)
-    public List<BrandData> getAllBrandData(@RequestBody BrandForm form) throws ApiException{
-        return dto.getAllBrandData(form);
-    }
-
     @ApiOperation(value = "Get list of inventory report")
     @RequestMapping(path="/api/report/inventory", method = RequestMethod.POST)
     public List<InventoryReportData> getAllInventoryData(@RequestBody BrandForm form) throws ApiException{

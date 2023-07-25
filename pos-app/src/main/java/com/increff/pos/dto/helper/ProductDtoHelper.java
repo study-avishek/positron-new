@@ -3,12 +3,10 @@ package com.increff.pos.dto.helper;
 import com.increff.pos.model.data.ProductData;
 import com.increff.pos.model.form.ProductForm;
 import com.increff.pos.pojo.ProductPojo;
-import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.util.StringUtil;
-import java.util.*;
-import java.util.stream.Collectors;
 
-import static com.increff.pos.util.TsvUtil.createRow;
+import java.util.HashMap;
+import java.util.List;
 
 public class ProductDtoHelper {
 

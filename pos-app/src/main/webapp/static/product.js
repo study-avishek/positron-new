@@ -238,7 +238,7 @@ function displayProductList(data){
                           		    e.brand,
                           		    e.category,
                           		    e.barcode,
-                          		    Number(e.mrp),
+                          		    Number(e.mrp).formatLongNumber(),
                           		    buttonHtml
                           		]
 		rows.push(col);
@@ -279,7 +279,7 @@ function displayProduct(data){
     resetAllFormErrors();
 	$("#product-edit-form input[name=name]").val(data.name);
     $("#product-edit-form input[name=barcode]").val(data.barcode);
-	$("#product-edit-form input[name=mrp]").val(data.mrp);
+	$("#product-edit-form input[name=mrp]").val(Number(data.mrp).formatLongNumber());
 	$("#product-edit-form input[name=id]").val(data.id);
 	$('#edit-product-modal').modal('toggle');
 }

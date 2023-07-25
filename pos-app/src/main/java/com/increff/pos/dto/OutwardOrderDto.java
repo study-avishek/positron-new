@@ -19,14 +19,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
-import static org.springframework.http.ResponseEntity.status;
 
 @Component
 public class OutwardOrderDto {
@@ -77,6 +76,7 @@ public class OutwardOrderDto {
         return list2;
     }
 
+    @Transactional(rollbackOn = ApiException.class)
     public ResponseEntity complete(int id, CustomerForm customerForm) throws ApiException, IOException {
         try {
             ValidationUtil.checkValid(customerForm);

@@ -4,20 +4,14 @@ package com.increff.pos.controller;
 import com.increff.pos.dto.ProductDto;
 import com.increff.pos.exception.ApiException;
 import com.increff.pos.exception.UploadException;
-import com.increff.pos.model.data.BrandData;
-import com.increff.pos.model.data.DataTableResponse;
 import com.increff.pos.model.data.ProductData;
 import com.increff.pos.model.form.ProductForm;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import javax.xml.crypto.Data;
 import java.util.List;
 
 @Api

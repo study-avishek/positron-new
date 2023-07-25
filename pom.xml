@@ -8,7 +8,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>employee-spring</name>
     <url>http://maven.apache.org</url>
     <modules>
         <module>invoice-app</module>

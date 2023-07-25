@@ -18,10 +18,6 @@ public class ReportApi {
         return dao.getAllSalesData(startDateTime, endDateTime, brandName, catName);
     }
 
-    public List<Object[]> getAllBrandData(String brand, String category){
-        return dao.getAllBrandData(brand, category);
-    }
-
     public List<Object[]> getAllInventoryData(String brand, String category){
         return dao.getAllInventoryData(brand, category);
     }

@@ -1,0 +1,202 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > OrderSummeryScheduler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.increff.pos.job</a>
+</div>
+
+<h1>Coverage Summary for Class: OrderSummeryScheduler (com.increff.pos.job)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OrderSummeryScheduler</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (23/23)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">OrderSummeryScheduler$$EnhancerBySpringCGLIB$$1c7da16d</td>
+  </tr>
+  <tr>
+    <td class="name">OrderSummeryScheduler$$EnhancerBySpringCGLIB$$1c7da16d$$FastClassBySpringCGLIB$$befbc88c</td>
+  </tr>
+  <tr>
+    <td class="name">OrderSummeryScheduler$$EnhancerBySpringCGLIB$$42113902</td>
+  </tr>
+  <tr>
+    <td class="name">OrderSummeryScheduler$$FastClassBySpringCGLIB$$bf54a52a</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (23/23)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.increff.pos.job;
+&nbsp;
+&nbsp;import com.increff.pos.dao.OrderItemDao;
+&nbsp;import com.increff.pos.dao.OutwardOrderDao;
+&nbsp;import com.increff.pos.dao.PosDaySaleDao;
+&nbsp;import com.increff.pos.exception.ApiException;
+&nbsp;import com.increff.pos.pojo.OutwardOrderPojo;
+&nbsp;import com.increff.pos.pojo.PosDaySalePojo;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.scheduling.annotation.EnableScheduling;
+&nbsp;import org.springframework.scheduling.annotation.Scheduled;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import javax.transaction.Transactional;
+&nbsp;import java.time.Instant;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;import java.time.ZoneOffset;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Configuration
+&nbsp;@Service
+&nbsp;@EnableScheduling
+&nbsp;@Transactional
+<b class="fc">&nbsp;public class OrderSummeryScheduler {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private OutwardOrderDao outwardOrderDao;
+&nbsp;    @Autowired
+&nbsp;    private OrderItemDao orderItemDao;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private PosDaySaleDao posDaySaleDao;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    @Scheduled(cron = &quot;${scheduler.time}&quot;)
+&nbsp;    public void scheduleOrder(){
+<b class="fc">&nbsp;        Instant instant = Instant.now();</b>
+<b class="fc">&nbsp;        LocalDateTime currentDateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);</b>
+<b class="fc">&nbsp;        LocalDate currentDate = currentDateTime.toLocalDate();</b>
+<b class="fc">&nbsp;        PosDaySalePojo p = new PosDaySalePojo();</b>
+&nbsp;
+<b class="fc">&nbsp;        List&lt;OutwardOrderPojo&gt; outwardOrderPojoList = outwardOrderDao.getAllByDateTimeRange(currentDateTime);</b>
+&nbsp;
+<b class="fc">&nbsp;        Double itemsCount = orderItemDao.getItemsCountByDateTimeRange(currentDateTime);</b>
+&nbsp;
+<b class="fc">&nbsp;        Double revenue = orderItemDao.getRevenueByDateTimeRange(currentDateTime);</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        if(itemsCount == null){</b>
+<b class="fc">&nbsp;            itemsCount = 0.0;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        if(revenue == null){</b>
+<b class="fc">&nbsp;            revenue = 0.0;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        PosDaySalePojo toUpdate= getCheck(currentDate);</b>
+<b class="fc">&nbsp;        if(toUpdate == null){</b>
+<b class="fc">&nbsp;            p.setDate(currentDate);</b>
+<b class="fc">&nbsp;            p.setOrderCount(outwardOrderPojoList.size());</b>
+<b class="fc">&nbsp;            p.setTotalRevenue(revenue);</b>
+<b class="fc">&nbsp;            p.setItemCount(itemsCount);</b>
+<b class="fc">&nbsp;            posDaySaleDao.insert(p);</b>
+&nbsp;        }
+&nbsp;        else{
+<b class="fc">&nbsp;            toUpdate.setOrderCount(outwardOrderPojoList.size());</b>
+<b class="fc">&nbsp;            toUpdate.setTotalRevenue(revenue);</b>
+<b class="fc">&nbsp;            toUpdate.setItemCount(itemsCount);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public PosDaySalePojo getCheck(LocalDate currentDate){
+<b class="fc">&nbsp;        return posDaySaleDao.select(currentDate);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-25 11:26</div>
+</div>
+</body>
+</html>

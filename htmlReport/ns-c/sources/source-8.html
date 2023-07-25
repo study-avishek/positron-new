@@ -1,0 +1,274 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ProductDto</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.increff.pos.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: ProductDto (com.increff.pos.dto)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProductDto</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93.3%
+  </span>
+  <span class="absValue">
+    (84/90)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.increff.pos.dto;
+&nbsp;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.nio.charset.StandardCharsets;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import com.increff.pos.api.ProductApi;
+&nbsp;import com.increff.pos.api.flow.ProductFlow;
+&nbsp;
+&nbsp;import com.increff.pos.exception.UploadException;
+&nbsp;
+&nbsp;import com.increff.pos.model.data.ProductData;
+&nbsp;import com.increff.pos.model.form.ProductForm;
+&nbsp;
+&nbsp;import com.increff.pos.pojo.BrandPojo;
+&nbsp;import com.increff.pos.pojo.ProductPojo;
+&nbsp;
+&nbsp;import io.swagger.annotations.Api;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import com.increff.pos.exception.ApiException;
+&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;
+&nbsp;import static com.increff.pos.dto.helper.ProductDtoHelper.*;
+&nbsp;import static com.increff.pos.util.TsvUtil.createRow;
+&nbsp;import static com.increff.pos.util.TsvUtil.parseHeader;
+&nbsp;import static com.increff.pos.util.ValidationUtil.checkValid;
+&nbsp;import static com.increff.pos.util.ValidationUtil.checkValidMultiple;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;public class ProductDto {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ProductApi api;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ProductFlow flow;
+&nbsp;
+&nbsp;    public int add(ProductForm form) throws ApiException {
+<b class="fc">&nbsp;        normalize(form) ;</b>
+<b class="fc">&nbsp;        checkValid(form);</b>
+<b class="fc">&nbsp;        int brandCatId = flow.getIdByBrandCategory(form.getBrand(), form.getCategory());</b>
+<b class="fc">&nbsp;        ProductPojo p = convert(form, brandCatId);</b>
+<b class="fc">&nbsp;        int id = api.add(p);</b>
+<b class="fc">&nbsp;        flow.initInventory(id);</b>
+&nbsp;
+<b class="fc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void tsvUpload(MultipartFile file) throws ApiException, UploadException {
+<b class="fc">&nbsp;        List&lt;List&lt;String&gt;&gt; errors = new ArrayList&lt;&gt;();</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            List&lt;ProductForm&gt; productForms = tsvToProductForm(file, errors);</b>
+<b class="fc">&nbsp;            if(errors.size() &gt; 0) throw new UploadException(&quot;Upload failed&quot;, errors);</b>
+<b class="fc">&nbsp;            checkValidMultiple(productForms, errors);</b>
+<b class="fc">&nbsp;            if(errors.size() &gt; 0) throw new UploadException(&quot;Upload failed&quot;, errors);</b>
+<b class="fc">&nbsp;            normalizeAndCheckDuplicateForms(productForms, errors);</b>
+<b class="fc">&nbsp;            if(errors.size() &gt; 0) throw new UploadException(&quot;Upload failed&quot;, errors);</b>
+<b class="fc">&nbsp;            List&lt;ProductPojo&gt; productPojos = convertToList(productForms, errors);</b>
+<b class="fc">&nbsp;            if(errors.size() &gt; 0) throw new UploadException(&quot;Upload failed&quot;, errors);</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;            api.addAll(productPojos);</b>
+<b class="fc">&nbsp;            for(ProductPojo p: productPojos) {</b>
+<b class="fc">&nbsp;                flow.initInventory(p.getId());</b>
+<b class="fc">&nbsp;            }</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (IOException e){</b>
+<b class="nc">&nbsp;            throw new UploadException(&quot;Something went wrong! make sure tsv contains less than 5000 lines&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ProductData get(int id) throws ApiException {
+<b class="fc">&nbsp;        ProductPojo p = api.getCheck(id);</b>
+<b class="fc">&nbsp;        BrandPojo brandPojo = flow.getBrandById(p.getBrandCatId());</b>
+<b class="fc">&nbsp;        return convert(p, brandPojo.getBrand(), brandPojo.getCategory());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ProductData&gt; getAll() throws ApiException {
+<b class="fc">&nbsp;        List&lt;Object[]&gt; list = api.getAll();</b>
+<b class="fc">&nbsp;        List&lt;ProductData&gt; list2 = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for(Object[] obj: list) {</b>
+<b class="fc">&nbsp;            ProductData data = new ProductData();</b>
+<b class="fc">&nbsp;            data.setName((String)obj[0]);</b>
+<b class="fc">&nbsp;            data.setBarcode((String)obj[1]);</b>
+<b class="fc">&nbsp;            data.setBrand((String)obj[2]);</b>
+<b class="fc">&nbsp;            data.setCategory((String)obj[3]);</b>
+<b class="fc">&nbsp;            data.setMrp(String.valueOf(obj[4]));</b>
+<b class="fc">&nbsp;            data.setId((int)obj[5]);</b>
+<b class="fc">&nbsp;            list2.add(data);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return list2;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void update(int id, ProductForm form) throws ApiException{
+<b class="fc">&nbsp;        normalize(form);</b>
+<b class="fc">&nbsp;        checkValid(form);</b>
+<b class="fc">&nbsp;        int brandCatId = flow.getIdByBrandCategory(form.getBrand(), form.getCategory());</b>
+<b class="fc">&nbsp;        ProductPojo p = convert(form, brandCatId);</b>
+<b class="fc">&nbsp;        api.update(id, p);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ProductPojo&gt; convertToList(List&lt;ProductForm&gt; productForms, List&lt;List&lt;String&gt;&gt; errors) throws ApiException {
+<b class="fc">&nbsp;        List&lt;ProductPojo&gt; productPojoList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        int i = 1;</b>
+<b class="fc">&nbsp;        for(ProductForm productForm: productForms){</b>
+<b class="fc">&nbsp;            ProductPojo p = new ProductPojo();</b>
+<b class="fc">&nbsp;            p.setName(productForm.getName());</b>
+<b class="fc">&nbsp;            p.setBarcode(productForm.getBarcode());</b>
+<b class="fc">&nbsp;            p.setMrp(Double.parseDouble(productForm.getMrp()));</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                p.setBrandCatId(flow.getIdByBrandCategory(productForm.getBrand(), productForm.getCategory()));</b>
+&nbsp;            }
+<b class="nc">&nbsp;            catch (ApiException e){</b>
+<b class="nc">&nbsp;                errors.add(createRow(i, productForm.getBrand() + &quot; | &quot; + productForm.getCategory(), &quot;Brand category does not exist&quot;));</b>
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;            productPojoList.add(p);</b>
+<b class="fc">&nbsp;            i++;</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return productPojoList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ProductForm&gt; tsvToProductForm(MultipartFile file, List&lt;List&lt;String&gt;&gt; error) throws ApiException, UploadException, IOException {
+<b class="fc">&nbsp;        List&lt;ProductForm&gt; objectsList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));</b>
+&nbsp;        String line;
+<b class="fc">&nbsp;        int i = 1;</b>
+<b class="fc">&nbsp;        HashMap&lt;String, Integer&gt; map = parseHeader(br.readLine(), new String[]{&quot;name&quot;,&quot;brand&quot;,&quot;category&quot;,&quot;barcode&quot;,&quot;mrp&quot;});</b>
+<b class="fc">&nbsp;        while ((line = br.readLine()) != null &amp;&amp; i &lt; 5000) {</b>
+<b class="fc">&nbsp;            if (line.trim().isEmpty()) {</b>
+<b class="fc">&nbsp;                i++;</b>
+<b class="fc">&nbsp;                continue;</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            String[] columns = line.split(&quot;\t&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;            if(columns.length != 5){</b>
+<b class="nc">&nbsp;                error.add(createRow(i, &quot;Column size: &quot; + columns.length,&quot;Column size must be 5&quot;));</b>
+<b class="nc">&nbsp;                continue;</b>
+&nbsp;            }
+<b class="fc">&nbsp;            ProductForm object = createProductForm(columns, map, error, i+1);</b>
+<b class="fc">&nbsp;            objectsList.add(object);</b>
+<b class="fc">&nbsp;            i++;</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        if(br.readLine()!=null) throw new UploadException(&quot;Input file contains more than 5000 lines&quot;);</b>
+<b class="fc">&nbsp;        return objectsList;</b>
+&nbsp;    }
+&nbsp;    public void normalizeAndCheckDuplicateForms(List&lt;ProductForm&gt; forms, List&lt;List&lt;String&gt;&gt; errors) throws UploadException{
+<b class="fc">&nbsp;        HashSet&lt;String&gt; set = new HashSet&lt;&gt;();</b>
+<b class="fc">&nbsp;        for(int i = 0 ; i &lt; forms.size();i++){</b>
+<b class="fc">&nbsp;            ProductForm form = forms.get(i);</b>
+<b class="fc">&nbsp;            normalize(form);</b>
+&nbsp;            try{
+<b class="fc">&nbsp;                ProductPojo p = api.getCheck(form.getBarcode());</b>
+<b class="fc">&nbsp;                errors.add(createRow(i+1, &quot;Barcode: &quot;+form.getBarcode(),&quot;Barcode already exists in master&quot;));</b>
+&nbsp;            }
+<b class="fc">&nbsp;            catch (ApiException ignored){</b>
+<b class="fc">&nbsp;            }</b>
+<b class="fc">&nbsp;            if(set.contains(form.getBarcode())){</b>
+<b class="fc">&nbsp;                List&lt;String&gt; temp = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;                errors.add(createRow(i+1, &quot;Barcode: &quot;+form.getBarcode(), &quot;Duplicate barcode found in tsv&quot;));</b>
+&nbsp;            }
+<b class="fc">&nbsp;            set.add(form.getBarcode());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-25 11:26</div>
+</div>
+</body>
+</html>
