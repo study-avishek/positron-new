@@ -56,8 +56,7 @@ public class OutwardOrderDto {
     }
 
     public void delete(int id) throws ApiException {
-        flow.deleteItemsByOrderId(id) ;
-        api.delete(id);
+        api.delete(id, flow.getOrderItemCount(id));
     }
 
     public List<OutwardOrderData> getAll() throws ApiException{

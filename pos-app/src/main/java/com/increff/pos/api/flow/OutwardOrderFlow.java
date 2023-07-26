@@ -5,6 +5,7 @@ import com.increff.pos.api.OrderItemApi;
 import com.increff.pos.api.ProductApi;
 import com.increff.pos.exception.ApiException;
 import com.increff.pos.model.data.InvoiceItemData;
+import com.increff.pos.model.enums.OrderStatus;
 import com.increff.pos.model.form.CustomerForm;
 import com.increff.pos.model.form.InvoiceForm;
 import com.increff.pos.pojo.InventoryPojo;
@@ -35,9 +36,10 @@ public class OutwardOrderFlow {
     @Autowired
     private OrderItemFlow orderItemFlow;
 
-    public void deleteItemsByOrderId(int id) throws ApiException {
-        orderItemApi.deleteItemsByOrderId(id);
+    public int getOrderItemCount(int orderId){
+        return orderItemApi.getAll(orderId).size();
     }
+
 
     public InvoiceForm complete(int id, CustomerForm customerForm) throws ApiException {
         List<OrderItemPojo> orderItemPojos = orderItemApi.getAll(id);

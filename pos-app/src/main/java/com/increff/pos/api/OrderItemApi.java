@@ -2,6 +2,7 @@ package com.increff.pos.api;
 
 import com.increff.pos.dao.OrderItemDao;
 import com.increff.pos.exception.ApiException;
+import com.increff.pos.model.enums.OrderStatus;
 import com.increff.pos.pojo.OrderItemPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,10 +37,6 @@ public class OrderItemApi {
 
     public OrderItemPojo getCheck(int orderId, int prodId) throws ApiException {
         return dao.select(orderId, prodId);
-    }
-
-    public void deleteItemsByOrderId(int orderId) throws ApiException{
-        dao.deleteItemsByOrderId(orderId);
     }
 
     public int lockedInventory(int prodId) throws ApiException {

@@ -119,7 +119,7 @@ function displayEditItem(prodId){
 function showItem(data){
     resetAllFormErrors();
 	$('#edit-item-modal').modal('toggle');
-	$('#edit-item-form input[name=barcode]').val(Number(data.barcode).formatLongNumber());
+	$('#edit-item-form input[name=barcode]').val(data.barcode.formatLongNumber());
 	$('#edit-item-form input[name=quantity]').val(Number(data.quantity).formatLongNumber());
 	$('#edit-item-form input[name=sellingPrice]').val(Number(data.sellingPrice).formatLongNumber());
 }

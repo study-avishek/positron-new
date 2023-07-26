@@ -66,7 +66,8 @@ public class AppRestControllerAdvice {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public MessageData handle(Throwable e) {
 		MessageData data = new MessageData();
-		data.setMessage("Oops!! Something went wrong on our end. Try again later or contact support");
+		data.setMessage("Oops!! Something went wrong on our end. Try again later or contact support "+e.getMessage());
+		data.setDetailedMessage(Arrays.toString(e.getStackTrace()));
 		logger.error(Arrays.asList(e.getStackTrace()));
 		return data;
 	}

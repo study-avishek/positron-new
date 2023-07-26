@@ -22,7 +22,7 @@
             Complete</button>
         <button type="button" class="btn btn-danger mx-2" id="show-delete-order-modal" th:if="${(param.status != null) and (param.status[0] == 'active')}">
             <i class="fa-solid fa-trash mr-2" style="color: #ffffff;"></i>
-            Delete</button>
+            Cancel</button>
         <h3><span class="badge badge-pill badge-secondary ml-5">Grand total: <span class="total-amount">0</span> Rs.</span></h3>
         <h3 th:if="${param.id != null}"><span class="badge text-white badge-pill badge-warning ml-3">Order Id: <span th:text="${param.id}"></span></span></h3>
     </div>

@@ -1,5 +1,6 @@
 package com.increff.pos.spring;
 
+import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,13 +10,12 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.AuthenticationEntryPoint;
-
+@Log4j
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private static Logger logger = Logger.getLogger(SecurityConfig.class);
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// Ignore CSRF and CORS
 				.and().csrf().disable().cors().disable()//
 				.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
-		logger.info("Configuration complete");
+		log.info("Configuration complete");
 	}
 
 	@Override

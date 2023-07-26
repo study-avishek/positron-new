@@ -16,7 +16,7 @@ $(document).ready( function () {
                                       "searchable": true,
                                       "orderable": true
                                     },{
-                                              "targets": 1, // your case first column
+                                              "targets": [1], // your case first column
                                               "className": "text-center",
                                               "vertical-align": "center"
                                          } ]
@@ -63,18 +63,22 @@ function displayOrderList(data){
     	var e = data[i];
     	var button1, button2, total, badge;
     	var status = "'" + e.orderStatus.toLowerCase() + "'";
-
     	if(e.orderStatus == "ACTIVE"){
     	    badge = '<h5><span class="badge badge-pill badge-success">active</span></h5>';
-    	    button1 = ' <button onclick="viewOrder(' + e.id +','+status + ')" class="btn btn-primary text-white mr-2"><i class="fa-solid fa-eye mr-2" style="color: #ffffff;"></i>view</button>';
-    	    button2 = ' <button onclick="showDeleteOrder(' + e.id + ')" class="btn btn-danger text-white pr-4"><i class="fa-solid fa-trash mr-2" style="color: #ffffff;"></i>delete</button>';
+    	    button1 = ' <button onclick="viewOrder(' + e.id +','+status + ')" class="btn btn-primary text-white mr-2"><i class="fa-solid fa-eye mr-2" style="color: #ffffff;"></i>View</button>';
+    	    button2 = ' <button onclick="showDeleteOrder(' + e.id + ')" class="btn btn-danger text-white pr-5"><i class="fa-solid fa-trash mr-3" style="color: #ffffff;"></i>Cancel</button>';
     	    total = button1+button2;
     	}
-    	else{
+    	else if(e.orderStatus == "COMPLETED"){
     	    badge = '<h5><span class="badge badge-pill badge-secondary">invoiced</span></h5>';
-            button1 = ' <button onclick="viewOrder(' + e.id +','+status + ')" class="btn btn-primary text-white mr-2"><i class="fa-solid fa-eye mr-2" style="color: #ffffff;"></i>view</button>';
-            button2 = ' <a href="/positron/api/resource/invoice-'+e.id+'.pdf" class="btn btn-warning text-white"><i class="fa-solid fa-cloud-arrow-down mr-2" style="color: #ffffff;"></i>download</a>';
+            button1 = ' <button onclick="viewOrder(' + e.id +','+status + ')" class="btn btn-primary text-white mr-2"><i class="fa-solid fa-eye mr-2" style="color: #ffffff;"></i>View</button>';
+            button2 = ' <a href="/positron/api/resource/invoice-'+e.id+'.pdf" class="btn btn-warning text-white pr-4"><i class="fa-solid fa-cloud-arrow-down mr-2" style="color: #ffffff;"></i>Download</a>';
             total = button1+button2;
+    	}
+    	else{
+    	    button1 = ' <button onclick="viewOrder(' + e.id +','+status + ')" class="btn btn-primary text-white mr-2"><i class="fa-solid fa-eye mr-2" style="color: #ffffff;"></i>View</button>';
+    	    badge = '<h5><span class="badge badge-pill badge-danger">Cancelled</span></h5>';
+            total = button1;
     	}
     	table.row.add([
     		e.id,

@@ -25,8 +25,17 @@ public class OutwardOrderApi {
         return dao.add(p);
     }
 
-    public void delete(int id){
-        dao.delete(id);
+    public void delete(int id, int count) throws ApiException {
+        if(count == 0){
+            dao.delete(id);
+            return;
+        }
+        OutwardOrderPojo p = dao.select(id, OrderStatus.ACTIVE);
+        if(p==null){
+            throw new ApiException("Can't  cancel requested order");
+        }
+        p.setOrderStatus(OrderStatus.CANCELLED);
+        p.setOrderDateTime(LocalDateTime.now());
     }
 
     public List<Object[]> getAll(){
